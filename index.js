@@ -1,3 +1,4 @@
+require('express-async-errors');
 const express = require('express');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -6,8 +7,10 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.js');
+const errorHandller = require('./middleware/errorHandler')
 
 dotenv.config();
+
 
 const app = express();
 
@@ -19,8 +22,11 @@ app.use(cors());
 
 
 // middlewares
+app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use(errorHandller);
+
 
 mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true} )
 .then(() => {
