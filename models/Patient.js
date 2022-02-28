@@ -6,7 +6,11 @@ const PatientSchema = new mongoose.Schema({
     email: {
         type:String,
         required: true,
-        unique: true
+        unique: true,
+        match: [
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            'Please provide a valid email',
+          ]
     },
     username: {
         type: String,
@@ -41,7 +45,7 @@ const PatientSchema = new mongoose.Schema({
     followers: [{type:mongoose.Types.ObjectId, ref: 'Patient', unique:true}],
 
     clinicians: [{patient_id: {type: mongoose.Types.ObjectId,
-                     ref: 'Doctor', unique:true}, 
+                     ref: 'Doctor', unique: true}, 
                     date: {type: Date, default: Date.now},
                     _id : false}],
     chronics: [{ 

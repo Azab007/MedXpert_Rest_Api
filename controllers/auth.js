@@ -15,8 +15,16 @@ const register = async (req, res, next) => {
       error.data = errors.array();
       throw error;
     }
-    const type = req.body.type;
-    delete req.body.type;
+    const type = req.body.rule;
+    delete req.body.rule;
+    const matched = req.body.password.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+    
+    if (!matched) {
+        const err = new Error();
+        err.statusCode = 401;
+        err.message = "Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character";
+        throw err;
+    }
     const hasedPassword = await bcrypt.hash(req.body.password, 12);
     try {
         if (type === 'patient'){
@@ -59,11 +67,11 @@ const register = async (req, res, next) => {
         
     } 
     
-    catch (error) {
+    catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
                 }
-                next(err);
+                throw(err)
     }
    
 }
@@ -78,25 +86,26 @@ const login = async (req, res, next) => {
 
     const email = req.body.email;
     const password = req.body.password;
+
     
 
     let loaded;
-    if (type === 'patient'){
+    if (rule === 'patient'){
         loaded = await Patient.findOne({email: email});
     }
 
-    else if (type === 'doctor'){
+    else if (rule === 'doctor'){
         loaded = await Doctor.findOne({email: email});
     }
 
-    else if (type === 'pharma_inc'){
+    else if (rule === 'pharma_inc'){
         loaded = await Pharma_Inc.findOne({email: email});
     }
 
     else {
         const error = new Error('Log in Failed.');
         error.statusCode = 422;
-       return next(error)
+       throw error
     }
 
 
@@ -105,14 +114,14 @@ const login = async (req, res, next) => {
          if (!loaded) {
           const error = new Error('A user with this email could not be found.');
           error.statusCode = 401;
-          return next(error)
+          throw error
         }
 
         const validPassword = await bcrypt.compare(password, loaded.password);
         if (!validPassword){
           const error = new Error('Wrong password!');
           error.statusCode = 401;
-          return next(error);
+          throw error
         
         }
 
@@ -130,7 +139,7 @@ const login = async (req, res, next) => {
         if (!error.statusCode) {
             error.statusCode = 500;
         }
-        next(error);
+        throw error
     }
 
     
