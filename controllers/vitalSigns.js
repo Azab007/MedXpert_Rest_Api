@@ -30,7 +30,7 @@ const updateVitalSign =async (req, res) => {
         const VitalSign_id = req.query.id;
         const vitalSign = await VitalSign.findByIdAndUpdate(VitalSign_id,{$set: req.body}, { runValidators: true, new: true });
         if(!vitalSign) {
-            Err("no VitalSign matches this id", 404);
+            throw Err("no VitalSign matches this id", 404);
         }
         
         res.status(200).json({vitalSign,msg:"the VitalSign is updated succesfully"});
@@ -42,7 +42,7 @@ const deleteVitalSign =async (req, res) => {
         const VitalSign_id = req.query.id;
         const vitalSign = await VitalSign.findByIdAndRemove(VitalSign_id);
         if(!vitalSign) {
-            Err("no VitalSign matches this id", 404);
+           throw Err("no VitalSign matches this id", 404);
         }
         res.status(200).json({msg:"the VitalSign is deleted succesfully"});
     

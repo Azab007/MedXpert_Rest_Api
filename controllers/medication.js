@@ -40,9 +40,9 @@ const updateMedication =async (req, res) => {
 
 const deleteMedication =async (req, res) => {
         const Medication_id = req.query.id;
-        const medication = await Medication.findByIdAndRemove({_id: Medication_id}, { runValidators: true, new: true });
+        const medication = await Medication.findByIdAndRemove(Medication_id);
         if(!medication) {
-            Err("no Medication matches this id", 404);
+            throw Err("no Medication matches this id", 404);
         }
         res.status(200).json({msg:"the Medication is deleted succesfully"});
     
@@ -52,7 +52,7 @@ const addMedicationDrug = async (req, res) => {
         const medication_id = req.query.id;
         const medication = await Medication.findByIdAndUpdate(medication_id, {$push: {drugs: req.body}}, { runValidators: true, new: true });
         if(!medication) {
-            Err("no Medication matches this id", 404);
+            throw Err("no Medication matches this id", 404);
         }
         res.status(200).json({medication ,msg:"the Medication drug is added succesfully"});
    
@@ -62,7 +62,7 @@ const deleteMedicationDrug = async (req, res) => {
         const medication_id = req.query.id;
         const medication = await Medication.findByIdAndUpdate(medication_id, {$pull: {drugs: {drug_id: mongoose.Types.ObjectId(req.body.drug_id)}}}, { runValidators: true, new: true });
         if(!medication) {
-            Err("no medication matches this id", 404);
+            throw Err("no medication matches this id", 404);
         }
         res.status(200).json({medication,msg:"the medication drug is deleted succesfully"});
    
