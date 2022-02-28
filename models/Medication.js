@@ -2,27 +2,34 @@ const mongoose = require('mongoose');
 
 const MedicationSchema = new mongoose.Schema({
 
-    drug_id: [{
+    drugs: [
+        
+        {drug_id: {
         type:mongoose.Types.ObjectId,
         ref: 'Drug',
         required: true
-    }],
+    },
+
+    dose: {
+        type: mongoose.Types.Decimal128,
+        required: true
+    },
+    start_date: {
+        type: Date,
+        required: true,
+    },
+    end_date: {
+        type: Date,
+        required: true,
+    }
+    },
+    {_id: false}
+
+],
     patient_id: {
         type: mongoose.Types.ObjectId, ref: 'Patient',
          required: true
     },
-    dose: [{
-        type: mongoose.Types.Decimal128,
-        required: true
-    }],
-    start_date: [{
-        type: Date,
-        required: true,
-    }],
-    end_date: [{
-        type: Date,
-        required: true
-    }],
 
     currentlyTaken: {
         type: Boolean,
