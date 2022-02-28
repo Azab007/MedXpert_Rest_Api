@@ -21,9 +21,9 @@ const MedicationSchema = new mongoose.Schema({
     end_date: {
         type: Date,
         required: true,
-    }
     },
-    {_id: false}
+    _id : false
+    },
 
 ],
     patient_id: {

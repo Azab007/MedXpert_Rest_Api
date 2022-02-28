@@ -7,7 +7,10 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.js');
-const drugRoutes = require('./routes/drug.js')
+const drugRoutes = require('./routes/drug.js');
+const medicationRoutes = require('./routes/medication.js')
+const vitalSignRoutes = require('./routes/drug.js')
+
 const errorHandller = require('./middleware/errorHandler')
 
 dotenv.config();
@@ -26,6 +29,8 @@ app.use(cors());
 
 app.use("/api/auth", authRoutes);
 app.use('/api/drug', drugRoutes);
+app.use('/api/medication', medicationRoutes);
+app.use('/api/vitalSign', vitalSignRoutes);
 app.use(errorHandller);
 
 
