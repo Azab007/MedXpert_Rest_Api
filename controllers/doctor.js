@@ -30,4 +30,38 @@ const deleteDoc = async(req, res) => {
 
 }
 
-module.exports = { getDoc, getAllDoc, deleteDoc };
+const addSpecialization = async(req, res) => {
+    const { id, specialization } = req.body;
+    console.log(req.body)
+    const doc = await Doctor.findByIdAndUpdate(id, { $push: { specialization } }, { runValidators: true, new: true })
+    if (!doc) {
+        throw Err("doctor not found", 404)
+    }
+    res.status(200).json({ doc });
+}
+
+const deleteSpecialization = async(req, res) => {
+    const { id, specialization } = req.body
+    const doc = await Doctor.findByIdAndUpdate(id, { $pull: { specialization } }, { runValidators: true, new: true })
+    if (!doc) {
+        throw Err("doctor not found", 404)
+    }
+    res.status(200).json({ doc });
+}
+
+const update = async(req, res) => {
+    const { id, residency, bio } = req.body
+    const doc = await Doctor.findByIdAndUpdate(id, { residency, bio }, { runValidators: true, new: true })
+    res.status(200).json({ doc });
+}
+
+
+
+module.exports = {
+    getDoc,
+    getAllDoc,
+    deleteDoc,
+    addSpecialization,
+    deleteSpecialization,
+    update
+};
