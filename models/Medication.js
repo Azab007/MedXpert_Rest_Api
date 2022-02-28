@@ -22,7 +22,8 @@ const MedicationSchema = new mongoose.Schema({
         type: Date,
         required: true,
     }
-    }
+    },
+    {_id: false}
 
 ],
     patient_id: {
