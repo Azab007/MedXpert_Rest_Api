@@ -32,7 +32,7 @@ app.use("/api/auth", authRoutes);
 app.use('/api/drug', drugRoutes);
 app.use('/api/medication', medicationRoutes);
 app.use('/api/vitalSign', vitalSignRoutes);
-app.use('api/doctor', doctorRouter);
+app.use('/api/doctor', doctorRouter);
 app.use(errorHandller);
 
 
