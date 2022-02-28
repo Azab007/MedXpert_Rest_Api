@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth.js');
 const drugRoutes = require('./routes/drug.js');
 const medicationRoutes = require('./routes/medication.js')
 const vitalSignRoutes = require('./routes/drug.js')
+const doctorRouter = require('./routes/doctor')
 
 const errorHandller = require('./middleware/errorHandler')
 
@@ -31,14 +32,10 @@ app.use("/api/auth", authRoutes);
 app.use('/api/drug', drugRoutes);
 app.use('/api/medication', medicationRoutes);
 app.use('/api/vitalSign', vitalSignRoutes);
+app.use('/api/doctor', doctorRouter);
 app.use(errorHandller);
 
 
-mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true} )
-.then(() => {
-
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
     app.listen(process.env.PORT, () => console.log('Backend server is running'));
-})
-.catch(err => console.log(err))
-
-
+}).catch(err => console.log(err))
