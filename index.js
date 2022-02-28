@@ -7,7 +7,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.js');
-const drugRoutes = require('./routes/drug.js')
+const drugRoutes = require('./routes/drug.js');
+const doctorRoutes = require('./routes/doctor.js');
 const errorHandller = require('./middleware/errorHandler')
 
 dotenv.config();
@@ -26,14 +27,10 @@ app.use(cors());
 
 app.use("/api/auth", authRoutes);
 app.use('/api/drug', drugRoutes);
+app.use("/api/doctor", doctorRoutes);
 app.use(errorHandller);
 
 
-mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true} )
-.then(() => {
-
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
     app.listen(process.env.PORT, () => console.log('Backend server is running'));
-})
-.catch(err => console.log(err))
-
-
+}).catch(err => console.log(err))
