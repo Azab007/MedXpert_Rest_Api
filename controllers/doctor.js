@@ -50,8 +50,8 @@ const deleteSpecialization = async(req, res) => {
 }
 
 const update = async(req, res) => {
-    const { id, residency, bio } = req.body
-    const doc = await Doctor.findByIdAndUpdate(id, { residency, bio }, { runValidators: true, new: true })
+    const { id, username, residency, bio } = req.body
+    const doc = await Doctor.findByIdAndUpdate(id, { username, residency, bio }, { runValidators: true, new: true })
     res.status(200).json({ doc });
 }
 
