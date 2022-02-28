@@ -15,14 +15,13 @@ const register = async (req, res, next) => {
       error.data = errors.array();
       throw error;
     }
-    const type = req.body.rule;
-    delete req.body.rule;
-    const matched = req.body.password.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$");
+    const type = req.body.role;
+    delete req.body.role;
+    const matched = req.body.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);
     
     if (!matched) {
-        const err = new Error();
+        const err = new Error( "Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character");
         err.statusCode = 401;
-        err.message = "Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character";
         throw err;
     }
     const hasedPassword = await bcrypt.hash(req.body.password, 12);
@@ -84,21 +83,18 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
 
-    const email = req.body.email;
-    const password = req.body.password;
-
-    
+    const {email, password, role} = req.body
 
     let loaded;
-    if (rule === 'patient'){
+    if (role === 'patient'){
         loaded = await Patient.findOne({email: email});
     }
 
-    else if (rule === 'doctor'){
+    else if (role === 'doctor'){
         loaded = await Doctor.findOne({email: email});
     }
 
-    else if (rule === 'pharma_inc'){
+    else if (role === 'pharma_inc'){
         loaded = await Pharma_Inc.findOne({email: email});
     }
 
@@ -124,7 +120,7 @@ const login = async (req, res, next) => {
           throw error
         
         }
-
+        console.log('helooooooooooooooooooo');
         const token = jwt.sign(
           {
             email: loaded.email,
