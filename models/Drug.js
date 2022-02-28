@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const _ = require('underscore');
 
 const DrugSchema = new mongoose.Schema({
 
@@ -50,6 +51,7 @@ const DrugSchema = new mongoose.Schema({
     restrictions: [{condition_name:{
         type: String,
         required: true
+        
 
     }, description: {
         type: String,

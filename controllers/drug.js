@@ -54,7 +54,8 @@ const deleteDrug =async (req, res) => {
 const addInteraction = async(req, res) => {
     
         const drug_id = req.query.id;
-        const drug = await Drug.findByIdAndUpdate({_id: drug_id}, {$push: {interactions: req.body}} , { runValidators: true, new: true });
+
+        const drug = await Drug.findByIdAndUpdate(drug_id, {$push: {interactions: req.body}} , { runValidators: true, new: true });
         if(!drug) {
            throw Err("no drug matches this id", 404);
         }
@@ -67,7 +68,7 @@ const addInteraction = async(req, res) => {
 const deleteInteraction = async (req, res) => {
   
         const drug_id = req.query.id;
-        const drug = await Drug.findByIdAndUpdate({_id: drug_id}, {$pull: {interactions: {drug_id: mongoose.Types.ObjectId(req.body.drug_id)}}}, { runValidators: true, new: true });
+        const drug = await Drug.findByIdAndUpdate(drug_id, {$pull: {interactions: {drug_id: mongoose.Types.ObjectId(req.body.drug_id)}}}, { runValidators: true, new: true });
         if(!drug) {
            throw Err("no drug matches this id", 404);
         }

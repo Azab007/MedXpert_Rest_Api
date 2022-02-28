@@ -7,7 +7,7 @@ const MedicationSchema = new mongoose.Schema({
         {drug_id: {
         type:mongoose.Types.ObjectId,
         ref: 'Drug',
-        required: true
+        required: true,
     },
 
     dose: {
@@ -22,7 +22,7 @@ const MedicationSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
-    _id : false
+    _id : false,
     },
 
 ],
