@@ -32,7 +32,7 @@ const PatientSchema = new mongoose.Schema({
         max: 250
     },
     type: [{
-        type: String,
+        type: String
     }],
     residency: {
         type: String
