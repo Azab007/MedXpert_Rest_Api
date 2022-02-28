@@ -62,9 +62,35 @@ const deleteMedication =async (req, res) => {
     }
 }
 
+const addMedicationDrug = async (req, res) => {
+    try {
+        const medication_id = req.query.id;
+        const medication = await Medication.updateOne({_id: medication_id}, {$push: {drugs: req.body}});
+        if(!medication) {
+            Err("no Medication matches this id", 404);
+        }
+        res.status(200).json("the Medication drug is added succesfully");
+    } catch (error) {
+        Err("could not add the medication drug, pls try again", 500)
+    }
+}
+
+const deleteMedicationDrug = async (req, res) => {
+    try {
+        const medication_id = req.query.id;
+        const medication = await Medication.updateOne({_id: medication_id}, {$pull: {drugs: {drug_id: mongoose.Types.ObjectId(req.body.drug_id)}}});
+        if(!medication) {
+            Err("no medication matches this id", 404);
+        }
+        res.status(200).json("the medication drug is deleted succesfully");
+    } catch (error) {
+        Err("could not delete the medication drug, pls try again", 500)
+    }
+}
+
 
 
 
 module.exports = {
-    createMedication, getMedication, getAllMedications, updateMedication, deleteMedication
+    createMedication, getMedication, getAllMedications, updateMedication, deleteMedication, addMedicationDrug, deleteMedicationDrug
 };
