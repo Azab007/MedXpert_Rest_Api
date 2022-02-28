@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth.js');
+const drugRoutes = require('./routes/drug.js')
 const errorHandller = require('./middleware/errorHandler')
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(cors());
 // middlewares
 
 app.use("/api/auth", authRoutes);
+app.use('/api/drug', drugRoutes);
 app.use(errorHandller);
 
 

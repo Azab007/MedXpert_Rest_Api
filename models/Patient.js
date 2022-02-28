@@ -44,7 +44,7 @@ const PatientSchema = new mongoose.Schema({
 
     followers: [{type:mongoose.Types.ObjectId, ref: 'Patient', unique:true}],
 
-    clinicians: [{patient_id: {type: mongoose.Types.ObjectId,
+    clinicians: [{doctor_id: {type: mongoose.Types.ObjectId,
                      ref: 'Doctor', unique: true}, 
                     date: {type: Date, default: Date.now},
                     _id : false}],

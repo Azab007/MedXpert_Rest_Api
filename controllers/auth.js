@@ -120,11 +120,11 @@ const login = async (req, res, next) => {
           throw error
         
         }
-        console.log('helooooooooooooooooooo');
         const token = jwt.sign(
           {
             email: loaded.email,
-            userId: loaded._id.toString()
+            userId: loaded._id.toString(),
+            role: role
           },
           process.env.jwt_secret_key,
           { expiresIn: '1h' }
