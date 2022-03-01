@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const ReviewSchema = new mongoose.Schema({
 
     drug_id: {
-        type: mongoose.Types.ObjectId, ref: 'Drug',
-         required: true
+        type: mongoose.Types.ObjectId,
+        ref: 'Drug',
+        required: true
     },
     user_id: {
-        type: mongoose.Types.ObjectId, ref: 'Patient',
+        type: mongoose.Types.ObjectId,
+        ref: 'Patient',
         required: true
     },
     review: {
@@ -28,9 +30,7 @@ const ReviewSchema = new mongoose.Schema({
 
 
 
-},
-{timestamps: true}
-)
+}, { timestamps: true })
 
 
-module.exports = mongoose.model('Drug', ReviewSchema);
+module.exports = mongoose.model('Review', ReviewSchema);

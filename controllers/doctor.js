@@ -33,7 +33,7 @@ const deleteDoc = async(req, res) => {
 const addSpecialization = async(req, res) => {
     const { id, specialization } = req.body;
     console.log(req.body)
-    const doc = await Doctor.findByIdAndUpdate(id, { $push: { specialization } }, { runValidators: true, new: true })
+    const doc = await Doctor.findByIdAndUpdate(id, { $addToSet: { specialization } }, { runValidators: true, new: true })
     if (!doc) {
         throw Err("doctor not found", 404)
     }
