@@ -35,10 +35,10 @@ const removeReview = async(req, res) => {
 }
 
 const getReview = async(req, res) => {
-    const drug_id = req.params.drug_id
+    const { drug_id } = req.body
     const rev = await Review.find({ drug_id })
     if (!rev) {
-        throw new NotFoundError('review not found')
+        throw new NotFoundError('no reviews yet')
     }
     res.status(StatusCodes.OK).json({ "msg": "success", "data": rev })
 }
