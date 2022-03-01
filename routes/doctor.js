@@ -5,7 +5,7 @@ const {
     deleteDoc,
     addSpecialization,
     deleteSpecialization,
-    update
+    updateDoc
 } = require('../controllers/doctor.js')
 
 
@@ -14,7 +14,7 @@ router.route('/getAllDoctors').get(getAllDoc)
 router.route('/deleteDoctor').delete(deleteDoc)
 router.route('/addSpecialization').patch(addSpecialization)
 router.route('/deleteSpecialization').patch(deleteSpecialization)
-router.route('/update').patch(update)
+router.route('/updateDoc').patch(updateDoc)
 
 
 

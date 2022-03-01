@@ -22,7 +22,7 @@ const getAllpatients = async(req, res) => {
 
 const deletePatient = async(req, res) => {
     const { patient_id } = req.body;
-    const patient = await Patient.deleteOne({ _id: patient_id });
+    const patient = await Patient.findByIdAndDelete(patient_id);
     if (!patient) {
         throw new NotFoundError('patient not found')
     }

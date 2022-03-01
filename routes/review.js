@@ -1,16 +1,16 @@
 const router = require('express').Router();
 const {
-    add,
-    update,
-    remove,
-    get
+    addReview,
+    updateReview,
+    removeReview,
+    getReview
 } = require('../controllers/review')
 
 
-router.route('/createReview').post(add)
-router.route('/updateReview').patch(update)
-router.route('/deleteReview').delete(remove)
-router.route('/getReview/:drug_id').get(get)
+router.route('/createReview').post(addReview)
+router.route('/updateReview').patch(updateReview)
+router.route('/deleteReview').delete(removeReview)
+router.route('/getReview').get(getReview)
 
 
 module.exports = router
