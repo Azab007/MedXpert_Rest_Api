@@ -19,11 +19,6 @@ const ReviewSchema = new mongoose.Schema({
         type: Number,
         max: 10,
         required: true
-    },
-
-    useful_counts: {
-        type: Number,
-        default: 0
     }
 
 
