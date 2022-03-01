@@ -1,56 +1,64 @@
 const VitalSign = require('../models/VitalSigns.js')
-const {Err} = require('../middleware/throw_error.js');
+const { StatusCodes } = require('http-status-codes');
 const { default: mongoose } = require('mongoose');
+const { NotFoundError } = require('../errors');
 
-const createVitalSign = async (req, res) => {
-        const newVitalSign = new VitalSign({
-            ...req.body
-        });
+const createVitalSign = async(req, res) => {
+    const newVitalSign = new VitalSign({
+        ...req.body
+    });
 
-        await newVitalSign.save();
-        res.status(201).json(newVitalSign);
-  
+    await newVitalSign.save();
+    res.status(StatusCodes.CREATED).json(newVitalSign);
+
 }
 
 const getVitalSign = async(req, res) => {
-        const VitalSign_id = req.query.id;
-        const vitalSign = await VitalSign.findById(VitalSign_id);
-        res.status(200).json(vitalSign);
-    
+    const VitalSign_id = req.query.id;
+    const vitalSign = await VitalSign.findById(VitalSign_id);
+    if (!vitalSign) {
+        throw new NotFoundError("no vital sign found for this id")
+    }
+    res.status(StatusCodes.OK).json(vitalSign);
+
 }
 
 
-const getAllVitalSigns = async (req, res) => {
-        const VitalSigns = await VitalSign.find({});
-        res.status(200).json(VitalSigns);
-    
+const getAllVitalSigns = async(req, res) => {
+    const VitalSigns = await VitalSign.find({});
+    res.status(StatusCodes.OK).json(VitalSigns);
+
 }
 
-const updateVitalSign =async (req, res) => {
-        const VitalSign_id = req.query.id;
-        const vitalSign = await VitalSign.findByIdAndUpdate(VitalSign_id,{$set: req.body}, { runValidators: true, new: true });
-        if(!vitalSign) {
-            throw Err("no VitalSign matches this id", 404);
-        }
-        
-        res.status(200).json({vitalSign,msg:"the VitalSign is updated succesfully"});
-    
+const updateVitalSign = async(req, res) => {
+    const VitalSign_id = req.query.id;
+    const vitalSign = await VitalSign.findByIdAndUpdate(VitalSign_id, { $set: req.body }, { runValidators: true, new: true });
+    if (!vitalSign) {
+        throw NotFoundError("no VitalSign matches this id");
+    }
+
+    res.status(StatusCodes.OK).json({ vitalSign, msg: "the VitalSign is updated succesfully" });
+
 };
 
 
-const deleteVitalSign =async (req, res) => {
-        const VitalSign_id = req.query.id;
-        const vitalSign = await VitalSign.findByIdAndRemove(VitalSign_id);
-        if(!vitalSign) {
-           throw Err("no VitalSign matches this id", 404);
-        }
-        res.status(200).json({msg:"the VitalSign is deleted succesfully"});
-    
+const deleteVitalSign = async(req, res) => {
+    const VitalSign_id = req.query.id;
+    const vitalSign = await VitalSign.findByIdAndRemove(VitalSign_id);
+    if (!vitalSign) {
+        throw NotFoundError("no VitalSign matches this id", 404);
+    }
+    res.status(StatusCodes.OK).json({ msg: "the VitalSign is deleted succesfully" });
+
 }
 
 
 
 
 module.exports = {
-    createVitalSign, getVitalSign, getAllVitalSigns, updateVitalSign, deleteVitalSign
+    createVitalSign,
+    getVitalSign,
+    getAllVitalSigns,
+    updateVitalSign,
+    deleteVitalSign
 }
