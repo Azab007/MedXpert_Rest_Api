@@ -33,11 +33,20 @@ const add = async(req, res) => {
     res.status(200).json(patient)
 }
 
+const remove = async(req, res) => {
+    const { id, type, followers, clinicians, chronics } = req.body
+    const patient = await Patient.findByIdAndUpdate(id, { $pull: { type, followers, clinicians, chronics } }, { runValidators: true, new: true })
+    res.status(200).json(patient)
+}
+
+
+
 
 
 module.exports = {
     getPatient,
     getAllpatients,
     update,
-    add
+    add,
+    remove
 }
