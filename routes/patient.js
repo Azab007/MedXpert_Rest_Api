@@ -4,7 +4,8 @@ const {
     getAllpatients,
     update,
     add,
-    remove
+    remove,
+    deletePatient
 } = require('../controllers/patient')
 
 
@@ -13,6 +14,8 @@ router.route('/getAllPatients').get(getAllpatients)
 router.route("/update").post(update)
 router.route("/add").patch(add)
 router.route("/remove").patch(remove)
+router.route("/removePatient").delete(deletePatient)
+
 
 
 

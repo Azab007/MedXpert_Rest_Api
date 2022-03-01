@@ -13,6 +13,7 @@ const vitalSignRoutes = require('./routes/drug.js')
 const doctorRouter = require('./routes/doctor')
 const patientRouter = require('./routes/patient')
 const reviewRouter = require('./routes/review')
+const pharmaRoutes = require('./routes/pharma_inc')
 
 const errorHandller = require('./middleware/errorHandler')
 
@@ -37,6 +38,7 @@ app.use('/api/vitalSign', vitalSignRoutes);
 app.use('/api/doctor', doctorRouter);
 app.use('/api/patient', patientRouter)
 app.use('/api/review', reviewRouter)
+app.use('/api/pharma', pharmaRoutes)
 app.use(errorHandller);
 
 
