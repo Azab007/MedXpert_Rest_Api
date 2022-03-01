@@ -25,7 +25,7 @@ const deletePatient = async(req, res) => {
     const patient_id = req.query.id;
     const patient = await Patient.deleteOne({ _id: patient_id });
     if (!patient.deletedCount) {
-        throw Err("doctor not found", 404)
+        throw Err("patient not found", 404)
     }
     res.status(200).json({ "success": "true" })
 
