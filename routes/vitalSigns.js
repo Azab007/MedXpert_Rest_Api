@@ -4,7 +4,7 @@ const {createVitalSign, getAllVitalSigns, getVitalSign, updateVitalSign, deleteV
 router.route('/createvitalSign').post(createVitalSign);
 router.route('/getvitalSign').get(getVitalSign);
 router.route('/getAllvitalSigns').get(getAllVitalSigns);
-router.route('/updatevitalSign').post(updateVitalSign);
+router.route('/updatevitalSign').patch(updateVitalSign);
 router.route('/deletevitalSign').delete(deleteVitalSign);
 
 

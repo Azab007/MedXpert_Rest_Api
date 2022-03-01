@@ -4,9 +4,9 @@ const {createMedication, getMedication, getAllMedications, updateMedication, del
 router.route('/createMedication').post(createMedication);
 router.route('/getMedication').get(getMedication);
 router.route('/getAllMedications').get(getAllMedications);
-router.route('/updateMedication').post(updateMedication);
-router.route('/addMedicationDrug').post(addMedicationDrug);
-router.route('/deleteMedicationDrug').post(deleteMedicationDrug);
+router.route('/updateMedication').patch(updateMedication);
+router.route('/addMedicationDrug').patch(addMedicationDrug);
+router.route('/deleteMedicationDrug').patch(deleteMedicationDrug);
 router.route('/deleteMedication').delete(deleteMedication);
 
 

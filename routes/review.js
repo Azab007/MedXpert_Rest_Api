@@ -7,10 +7,10 @@ const {
 } = require('../controllers/review')
 
 
-router.route('/add').post(add)
-router.route('/update').post(update)
-router.route('/remove').delete(remove)
-router.route('/:drug_id').get(get)
+router.route('/createReview').post(add)
+router.route('/updateReview').patch(update)
+router.route('/deleteReview').delete(remove)
+router.route('/getReview/:drug_id').get(get)
 
 
 module.exports = router

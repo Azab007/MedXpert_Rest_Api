@@ -3,7 +3,7 @@ const {createPharma, getPharma, getAllPharmas, updatePharma, deletePharma, } = r
 
 router.route('/getPharma').get(getPharma);
 router.route('/getAllPharmas').get(getAllPharmas);
-router.route('/updatePharma').post(updatePharma);
+router.route('/updatePharma').patch(updatePharma);
 router.route('/deletePharma').delete(deletePharma);
 
 

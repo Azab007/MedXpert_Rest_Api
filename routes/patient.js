@@ -11,10 +11,10 @@ const {
 
 router.route('/getPatient').get(getPatient)
 router.route('/getAllPatients').get(getAllpatients)
-router.route("/update").post(update)
-router.route("/add").patch(add)
+router.route("/updatePatient").patch(update)
+router.route("/addPatient").patch(add)
 router.route("/remove").patch(remove)
-router.route("/removePatient").delete(deletePatient)
+router.route("/deletePatient").delete(deletePatient)
 
 
 

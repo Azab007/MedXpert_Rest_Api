@@ -9,7 +9,7 @@ const add = async(req, res) => {
 
 const update = async(req, res) => {
     const { rev_id, review, rating } = req.body
-    const rev = await Review.findByIdAndUpdate(rev_id, { rev_id, review, rating }, { runValidators: true, new: true })
+    const rev = await Review.findByIdAndUpdate(rev_id, {review, rating }, { runValidators: true, new: true })
     res.status(200).json({ rev })
 }
 
