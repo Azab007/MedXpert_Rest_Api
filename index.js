@@ -15,7 +15,7 @@ const patientRouter = require('./routes/patient')
 const reviewRouter = require('./routes/review')
 const pharmaRoutes = require('./routes/pharma_inc')
 
-const errorHandller = require('./middleware/errorHandler')
+const errorHandller = require('./middleware/error-handler')
 
 dotenv.config();
 
