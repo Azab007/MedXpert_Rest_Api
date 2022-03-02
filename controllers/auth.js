@@ -86,6 +86,14 @@ const login = async(req, res, next) => {
         },
         process.env.jwt_secret_key, { expiresIn: '30d' }
     );
+
+    const oneDay = 1000 * 60 * 60 * 24;
+    res.cookie('token', token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + oneDay),
+        secure: process.env.NODE_ENV === 'production',
+        signed: true,
+    });
     res.status(StatusCodes.OK).json({ "msg": "success", token });
 
 }
