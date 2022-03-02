@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const VitalSignsSchema = new mongoose.Schema({
 
     patient_id: {
-        type: mongoose.Types.ObjectId, ref: 'Patient',
-         required: true
+        type: mongoose.Types.ObjectId,
+        ref: 'Patient',
+        required: true
     },
     condition: {
         type: String,
@@ -31,9 +32,7 @@ const VitalSignsSchema = new mongoose.Schema({
 
 
 
-},
-{timestamps: true}
-)
+}, { timestamps: true })
 
 
 module.exports = mongoose.model('VitalSigns', VitalSignsSchema);

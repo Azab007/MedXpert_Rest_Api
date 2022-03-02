@@ -1,15 +1,21 @@
 const VitalSign = require('../models/VitalSigns.js')
 const { StatusCodes } = require('http-status-codes');
 const { default: mongoose } = require('mongoose');
-const { NotFoundError } = require('../errors');
+const { NotFoundError, BadRequestError } = require('../errors');
 
 const createVitalSign = async(req, res) => {
-    const newVitalSign = new VitalSign({
-        ...req.body
-    });
+    try {
+        const newVitalSign = new VitalSign({
+            ...req.body
+        });
 
-    await newVitalSign.save();
-    res.status(StatusCodes.CREATED).json(newVitalSign);
+        await newVitalSign.save();
+        res.status(StatusCodes.CREATED).json(newVitalSign);
+
+    } catch (error) {
+        throw new BadRequestError("failed to add vital sign ")
+    }
+
 
 }
 
@@ -26,6 +32,9 @@ const getVitalSign = async(req, res) => {
 
 const getAllVitalSigns = async(req, res) => {
     const VitalSigns = await VitalSign.find({});
+    if (!VitalSigns.length) {
+        throw new NotFoundError("no vital signs found in database")
+    }
     res.status(StatusCodes.OK).json(VitalSigns);
 
 }

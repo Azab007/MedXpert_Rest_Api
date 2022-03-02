@@ -1,16 +1,15 @@
 const mongoose = require('mongoose');
-const arrayUniquePlugin = require('mongoose-unique-array'); 
 
 const PatientSchema = new mongoose.Schema({
 
     email: {
-        type:String,
+        type: String,
         required: true,
         unique: true,
         match: [
             /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             'Please provide a valid email',
-          ]
+        ]
     },
     username: {
         type: String,
@@ -26,9 +25,9 @@ const PatientSchema = new mongoose.Schema({
         required: true
     },
     gender: {
-    type: String,
-    enum: ['male', 'female','other'],
-    required: true
+        type: String,
+        enum: ['male', 'female', 'other'],
+        required: true
     },
 
     weight: {
@@ -42,35 +41,36 @@ const PatientSchema = new mongoose.Schema({
         type: String
     },
 
-    followers: [{type:mongoose.Types.ObjectId, ref: 'Patient'}],
+    followers: [{ type: mongoose.Types.ObjectId, ref: 'Patient' }],
 
-    clinicians: [{doctor_id: {type: mongoose.Types.ObjectId,
-                     ref: 'Doctor'}, 
-                    date: {type: Date, default: Date.now},
-                    _id : false}],
-    chronics: [{ 
+    clinicians: [{
+        doctor_id: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Doctor'
+        },
+        date: { type: Date, default: Date.now },
+        _id: false
+    }],
+    chronics: [{
         chronic_name: {
-        type: String,
-        required:true
-    },
+            type: String,
+            required: true
+        },
         since: {
             type: Date,
-            
+
         },
         state: {
             type: String,
             enum: []
-           
+
         },
-        _id : false
+        _id: false
 
 
     }]
 
 
-},
-{timestamps: true}
-)
+}, { timestamps: true })
 
-PatientSchema.plugin(arrayUniquePlugin);
 module.exports = mongoose.model('Patient', PatientSchema);

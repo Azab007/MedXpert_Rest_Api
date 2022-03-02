@@ -1,14 +1,20 @@
 const Medication = require('../models/Medication.js')
 const { StatusCodes } = require('http-status-codes');
 const { default: mongoose } = require('mongoose');
-const { NotFoundError } = require('../errors');
+const { NotFoundError, BadRequestError } = require('../errors');
 const createMedication = async(req, res) => {
-    const newMedication = new Medication({
-        ...req.body
-    });
+    try {
+        const newMedication = new Medication({
+            ...req.body
+        });
 
-    await newMedication.save();
-    res.status(StatusCodes.CREATED).json(newMedication);
+        await newMedication.save();
+        res.status(StatusCodes.CREATED).json(newMedication);
+
+    } catch (error) {
+        throw new BadRequestError(error.message);
+    }
+
 
 }
 
@@ -26,13 +32,17 @@ const getMedication = async(req, res) => {
 const getAllMedications = async(req, res) => {
 
     const Medications = await Medication.find({});
+    if (!Medications.length) {
+        throw new NotFoundError("No medications in database")
+    }
     res.status(StatusCodes.OK).json(Medications);
 
 }
 
 const updateMedication = async(req, res) => {
     const Medication_id = req.query.id;
-    const medication = await Medication.findByIdAndUpdate(Medication_id, { $set: req.body }, { runValidators: true, new: true });
+    const { _id, drugs, ...others } = req.body
+    const medication = await Medication.findByIdAndUpdate(Medication_id, { $set: others }, { runValidators: true, new: true });
     if (!medication) {
         throw new NotFoundError("no Medication matches this id");
     }
@@ -54,7 +64,7 @@ const deleteMedication = async(req, res) => {
 
 const addMedicationDrug = async(req, res) => {
     const medication_id = req.query.id;
-    const medication = await Medication.findByIdAndUpdate(medication_id, { $push: { drugs: req.body } }, { runValidators: true, new: true });
+    const medication = await Medication.findByIdAndUpdate(medication_id, { $addToSet: { drugs: req.body } }, { runValidators: true, new: true });
     if (!medication) {
         throw new NotFoundError("no Medication matches this id");
     }

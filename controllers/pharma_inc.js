@@ -17,6 +17,9 @@ const getPharma = async(req, res) => {
 
 const getAllPharmas = async(req, res) => {
     const Pharmas = await Pharma_inc.find({});
+    if (!Pharmas.length) {
+        throw new NotFoundError("no pharma incorporation found in database")
+    }
     res.status(StatusCodes.OK).json(Pharmas);
 
 }
