@@ -10,7 +10,7 @@ const getPharma = async(req, res) => {
     if (!Pharma) {
         throw new NotFoundError("no pharma incorporation found for this id")
     }
-    res.status(StatusCodes.OK).json(Pharma);
+    res.status(StatusCodes.OK).json({ "data": Pharma, "msg": "success" });
 
 }
 
@@ -20,7 +20,7 @@ const getAllPharmas = async(req, res) => {
     if (!Pharmas.length) {
         throw new NotFoundError("no pharma incorporation found in database")
     }
-    res.status(StatusCodes.OK).json(Pharmas);
+    res.status(StatusCodes.OK).json({ "data": Pharmas, "msg": "success" });
 
 }
 
@@ -32,7 +32,7 @@ const updatePharma = async(req, res) => {
         throw new NotFoundError("no Pharma matches this id");
     }
 
-    res.status(StatusCodes.OK).json({ Pharma, msg: "the Pharma is updated succesfully" });
+    res.status(StatusCodes.OK).json({ "data": Pharma, msg: "the Pharma is updated succesfully" });
 };
 
 

@@ -10,7 +10,7 @@ const createVitalSign = async(req, res) => {
         });
 
         await newVitalSign.save();
-        res.status(StatusCodes.CREATED).json(newVitalSign);
+        res.status(StatusCodes.CREATED).json({ "data": newVitalSign, "msg": "vital sign created successfully" });
 
     } catch (error) {
         throw new BadRequestError("failed to add vital sign ")
@@ -25,7 +25,7 @@ const getVitalSign = async(req, res) => {
     if (!vitalSign) {
         throw new NotFoundError("no vital sign found for this id")
     }
-    res.status(StatusCodes.OK).json(vitalSign);
+    res.status(StatusCodes.OK).json({ "data": vitalSign, "msg": "success" });
 
 }
 
@@ -35,7 +35,7 @@ const getAllVitalSigns = async(req, res) => {
     if (!VitalSigns.length) {
         throw new NotFoundError("no vital signs found in database")
     }
-    res.status(StatusCodes.OK).json(VitalSigns);
+    res.status(StatusCodes.OK).json({ "data": VitalSigns, "msg": "success" });
 
 }
 
@@ -47,7 +47,7 @@ const updateVitalSign = async(req, res) => {
         throw NotFoundError("no VitalSign matches this id");
     }
 
-    res.status(StatusCodes.OK).json({ vitalSign, msg: "the VitalSign is updated succesfully" });
+    res.status(StatusCodes.OK).json({ "data": vitalSign, msg: "the VitalSign is updated succesfully" });
 
 };
 

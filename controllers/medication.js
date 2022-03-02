@@ -9,7 +9,7 @@ const createMedication = async(req, res) => {
         });
 
         await newMedication.save();
-        res.status(StatusCodes.CREATED).json(newMedication);
+        res.status(StatusCodes.CREATED).json({ "data": newMedication, "msg": "Medication created successfully" });
 
     } catch (error) {
         throw new BadRequestError(error.message);
@@ -24,7 +24,7 @@ const getMedication = async(req, res) => {
     if (!medication) {
         throw new NotFoundError("no medication found for this id")
     }
-    res.status(StatusCodes.OK).json(medication);
+    res.status(StatusCodes.OK).json({ "data": medication, "msg": "success" });
 
 }
 
@@ -35,7 +35,7 @@ const getAllMedications = async(req, res) => {
     if (!Medications.length) {
         throw new NotFoundError("No medications in database")
     }
-    res.status(StatusCodes.OK).json(Medications);
+    res.status(StatusCodes.OK).json({ "data": Medications, "msg": "success" });
 
 }
 
@@ -47,7 +47,7 @@ const updateMedication = async(req, res) => {
         throw new NotFoundError("no Medication matches this id");
     }
 
-    res.status(StatusCodes.OK).json({ medication, msg: "the Medication is updated succesfully" });
+    res.status(StatusCodes.OK).json({ "data": medication, msg: "the Medication is updated succesfully" });
 
 };
 
@@ -68,7 +68,7 @@ const addMedicationDrug = async(req, res) => {
     if (!medication) {
         throw new NotFoundError("no Medication matches this id");
     }
-    res.status(StatusCodes.OK).json({ medication, msg: "the Medication drug is added succesfully" });
+    res.status(StatusCodes.OK).json({ "data": medication, msg: "the Medication drug is added succesfully" });
 
 }
 
@@ -78,7 +78,7 @@ const deleteMedicationDrug = async(req, res) => {
     if (!medication) {
         throw new NotFoundError("no medication matches this id");
     }
-    res.status(StatusCodes.OK).json({ medication, msg: "the medication drug is deleted succesfully" });
+    res.status(StatusCodes.OK).json({ "data": medication, msg: "the medication drug is deleted succesfully" });
 
 }
 

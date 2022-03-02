@@ -9,7 +9,7 @@ const createDrug = async(req, res) => {
         });
 
         await newDrug.save();
-        res.status(StatusCodes.CREATED).json(newDrug);
+        res.status(StatusCodes.CREATED).json({ "data": newDrug, "msg": "Drug is created successfully" });
     } catch (error) {
         throw new BadRequestError(error.message)
     }
@@ -23,7 +23,7 @@ const getDrug = async(req, res) => {
     if (!drug) {
         throw new NotFoundError("Drug Not Found");
     }
-    res.status(StatusCodes.OK).json(drug);
+    res.status(StatusCodes.OK).json({ "data": drug, "msg": "sucess" });
 
 }
 
@@ -33,7 +33,7 @@ const getAllDrugs = async(req, res) => {
     if (!drugs.length) {
         throw new NotFoundError('no drugs in database')
     }
-    res.status(StatusCodes.OK).json(drugs);
+    res.status(StatusCodes.OK).json({ "data": drugs, "msg": "success" });
 
 }
 
@@ -51,8 +51,8 @@ const updateDrug = async(req, res) => {
     }
 
     res.status(StatusCodes.OK).json({
-        drug,
-        msg: "the Drug is updated succesfully"
+        "data": drug,
+        "msg": "the Drug is updated succesfully"
     });
 };
 
@@ -89,7 +89,7 @@ const addToList = async(req, res) => {
     }
 
     res.status(StatusCodes.OK).json({
-        newData,
+        "data": newData,
         msg: "the data is added succesfully"
     });
 
@@ -115,7 +115,7 @@ const deleteFromList = async(req, res) => {
     if (!newData) {
         throw new NotFoundError("no matches for this id");
     }
-    res.status(StatusCodes.OK).json({ newData, msg: "the data is deleted succesfully" });
+    res.status(StatusCodes.OK).json({ "data": newData, msg: "the data is deleted succesfully" });
 }
 
 
