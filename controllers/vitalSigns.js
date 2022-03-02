@@ -41,7 +41,8 @@ const getAllVitalSigns = async(req, res) => {
 
 const updateVitalSign = async(req, res) => {
     const VitalSign_id = req.query.id;
-    const vitalSign = await VitalSign.findByIdAndUpdate(VitalSign_id, { $set: req.body }, { runValidators: true, new: true });
+    const { _id, ...others } = req.body;
+    const vitalSign = await VitalSign.findByIdAndUpdate(VitalSign_id, { $set: others }, { runValidators: true, new: true });
     if (!vitalSign) {
         throw NotFoundError("no VitalSign matches this id");
     }
