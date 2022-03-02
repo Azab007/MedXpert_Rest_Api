@@ -17,8 +17,35 @@ const authenticateUser = async(req, res, next) => {
     }
 };
 
+const isDoctor = (req, res, next) => {
+    if (req.user.role === 'doctor') {
+        next()
+    } else {
+        throw new CustomError.UnauthenticatedError('Authentication Invalid');
+    }
+}
+
+const isPatient = (req, res, next) => {
+    if (req.user.role === 'patient') {
+        next()
+    } else {
+        throw new CustomError.UnauthenticatedError('Authentication Invalid');
+    }
+}
+
+
+const isPharma = (req, res, next) => {
+    if (req.user.role === 'pharma_inc') {
+        next()
+    } else {
+        throw new CustomError.UnauthenticatedError('Authentication Invalid');
+    }
+}
 
 
 module.exports = {
     authenticateUser,
+    isDoctor,
+    isPatient,
+    isPharma
 };
