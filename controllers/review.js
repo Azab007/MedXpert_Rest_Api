@@ -1,11 +1,11 @@
 const Review = require('../models/Review')
-const { NotFoundError, BadRequestError } = require('../errors')
+const { NotFoundError, BadRequestError, UnauthorizedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 
 const addReview = async(req, res) => {
+    const user_id = req.user.userId
     const {
         drug_id,
-        user_id,
         review,
         rating
     } = req.body
@@ -17,23 +17,33 @@ const addReview = async(req, res) => {
 }
 
 const updateReview = async(req, res) => {
+    const user_id = req.user.userId
     const { rev_id, review, rating } = req.body
+    const revcheck = await Review.findById(rev_id)
+    if (!revcheck) {
+        throw new NotFoundError('review not found')
+    }
+    if (revcheck.user_id !== user_id) {
+        throw new UnauthorizedError('not allowed')
+    }
     const rev = await Review.findByIdAndUpdate(rev_id, {
         review,
         rating
     }, { runValidators: true, new: true })
-    if (!rev) {
-        throw new NotFoundError('review not found')
-    }
     res.status(StatusCodes.OK).json({ "msg": "success", "data": rev })
 }
 
 const removeReview = async(req, res) => {
+    const user_id = req.user.userId
     const { rev_id } = req.body
-    const rev = await Review.findByIdAndDelete(rev_id)
-    if (!rev) {
+    const revcheck = await Review.findById(rev_id)
+    if (!revcheck) {
         throw new NotFoundError('review not found')
     }
+    if (revcheck.user_id !== user_id) {
+        throw new UnauthorizedError('not allowed')
+    }
+    const rev = await Review.findByIdAndDelete(rev_id)
     res.status(StatusCodes.OK).json({ "msg": "success", "data": rev })
 }
 

@@ -8,13 +8,17 @@ const {
     updateDoc
 } = require('../controllers/doctor.js')
 
+const {
+    authenticateUser,
+    isDoctor
+} = require('../middleware/authentication')
 
-router.route('/getDoctor').get(getDoc)
-router.route('/getAllDoctors').get(getAllDoc)
-router.route('/deleteDoctor').delete(deleteDoc)
-router.route('/addSpecialization').patch(addSpecialization)
-router.route('/deleteSpecialization').patch(deleteSpecialization)
-router.route('/updateDoc').patch(updateDoc)
+router.route('/getDoctor').get(authenticateUser, getDoc)
+router.route('/getAllDoctors').get(authenticateUser, getAllDoc)
+router.route('/deleteDoctor').delete(authenticateUser, isDoctor, deleteDoc)
+router.route('/addSpecialization').patch(authenticateUser, isDoctor, addSpecialization)
+router.route('/deleteSpecialization').patch(authenticateUser, isDoctor, deleteSpecialization)
+router.route('/updateDoc').patch(authenticateUser, isDoctor, updateDoc)
 
 
 

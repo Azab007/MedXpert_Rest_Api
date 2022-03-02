@@ -33,6 +33,13 @@ const isPatient = (req, res, next) => {
     }
 }
 
+const isPatientorDoctor = (req, res, next) => {
+    if (req.user.role === 'patient' || req.user.role === 'doctor') {
+        next()
+    } else {
+        throw new CustomError.UnauthenticatedError('Authentication Invalid');
+    }
+}
 
 const isPharma = (req, res, next) => {
     if (req.user.role === 'pharma_inc') {
@@ -47,5 +54,6 @@ module.exports = {
     authenticateUser,
     isDoctor,
     isPatient,
-    isPharma
+    isPharma,
+    isPatientorDoctor
 };

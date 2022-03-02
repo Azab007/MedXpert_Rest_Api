@@ -21,7 +21,7 @@ const getAllpatients = async(req, res) => {
 }
 
 const deletePatient = async(req, res) => {
-    const { patient_id } = req.body;
+    const { patient_id } = req.user.userId;
     const patient = await Patient.findByIdAndDelete(patient_id);
     if (!patient) {
         throw new NotFoundError('patient not found')
@@ -31,8 +31,8 @@ const deletePatient = async(req, res) => {
 }
 
 const updatePatient = async(req, res) => {
+    const id = req.user.userId
     const {
-        id,
         username,
         birthDate,
         gender,
@@ -63,9 +63,13 @@ const updatePatient = async(req, res) => {
 }
 
 const addToList = async(req, res) => {
-    console.log(req.body)
+    let id;
+    if (req.user.role === 'patient') {
+        id = req.user.userId
+    } else {
+        id = req.body.id
+    }
     const {
-        id,
         type,
         followers,
         clinicians,
@@ -86,8 +90,13 @@ const addToList = async(req, res) => {
 }
 
 const deleteFromList = async(req, res) => {
+    let id;
+    if (req.user.role === 'patient') {
+        id = req.user.userId
+    } else {
+        id = req.body.id
+    }
     const {
-        id,
         type,
         followers,
         clinicians: { doctor_id = null } = { doctor_id: null },

@@ -6,11 +6,15 @@ const {
     getReview
 } = require('../controllers/review')
 
+const {
+    authenticateUser,
+    isPatient
+} = require('../middleware/authentication')
 
-router.route('/createReview').post(addReview)
-router.route('/updateReview').patch(updateReview)
-router.route('/deleteReview').delete(removeReview)
-router.route('/getReview').get(getReview)
+router.route('/createReview').post(authenticateUser, isPatient, addReview)
+router.route('/updateReview').patch(authenticateUser, isPatient, updateReview)
+router.route('/deleteReview').delete(authenticateUser, isPatient, removeReview)
+router.route('/getReview').get(authenticateUser, getReview)
 
 
 module.exports = router
