@@ -29,7 +29,7 @@ const register = async(req, res, next) => {
         });
 
         await newPatient.save();
-        res.status(StatusCodes.CREATED).json({ "msg": "success", "data": newPatient });
+        res.status(StatusCodes.CREATED).json({ "msg": "success" });
     } else if (role === 'doctor') {
         const newDoctor = new Doctor({
             ...req.body,
@@ -38,7 +38,7 @@ const register = async(req, res, next) => {
         });
 
         await newDoctor.save();
-        res.status(StatusCodes.CREATED).json({ "msg": "success", "data": newDoctor });
+        res.status(StatusCodes.CREATED).json({ "msg": "success" });
     } else if (role === 'pharma_inc') {
         const newPharma = new Pharma_Inc({
             ...req.body,
@@ -47,7 +47,7 @@ const register = async(req, res, next) => {
         });
 
         await newPharma.save();
-        res.status(StatusCodes.CREATED).json({ "msg": "success", "data": newPharma });
+        res.status(StatusCodes.CREATED).json({ "msg": "success" });
     } else {
         throw new BadRequestError("unknown role")
     }
