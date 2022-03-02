@@ -5,7 +5,7 @@ const { StatusCodes } = require('http-status-codes');
 const getPatient = async(req, res) => {
     const { id } = req.body;
     const patient = await Patient.findById(id);
-    if (!Patient) {
+    if (!patient) {
         throw new NotFoundError('patient not found')
     }
     res.status(StatusCodes.OK).json({ "msg": "success", "data": patient })
@@ -42,6 +42,12 @@ const updatePatient = async(req, res) => {
 
     if (weight && weight <= 0) {
         throw new BadRequestError('invalid weight')
+    }
+    const bd = new Date(birthDate)
+    const lowerDate = new Date("1-1-1900")
+
+    if (bd > Date.now() || bd < lowerDate) {
+        throw new BadRequestError('invalid birth date')
     }
     const patient = await Patient.findByIdAndUpdate(id, {
         username,
@@ -84,15 +90,15 @@ const deleteFromList = async(req, res) => {
         id,
         type,
         followers,
-        clinicians,
-        chronics
+        clinicians: { doctor_id = null } = { doctor_id: null },
+        chronics: { chronic_name = "null" } = { chronic_name: "null" }
     } = req.body
     const patient = await Patient.findByIdAndUpdate(id, {
         $pull: {
             type,
             followers,
-            clinicians,
-            chronics
+            clinicians: { "doctor_id": doctor_id },
+            chronics: { "chronic_name": chronic_name }
         }
     }, { runValidators: true, new: true })
     if (!patient) {

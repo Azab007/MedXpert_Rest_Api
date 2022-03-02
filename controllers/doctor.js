@@ -15,7 +15,7 @@ const getDoc = async(req, res) => {
 
 const getAllDoc = async(req, res) => {
     const docs = await Doctor.find({});
-    if (!docs) {
+    if (!docs.length) {
         throw new NotFoundError('no doctors in database')
     }
     res.status(StatusCodes.OK).json({ "msg": "success", "data": docs })
@@ -53,7 +53,7 @@ const deleteSpecialization = async(req, res) => {
     if (!doc) {
         throw Err("doctor not found", 404)
     }
-    res.status(200).json({ doc });
+    res.status(StatusCodes.OK).json({ "msg": "success", "data": doc })
 }
 
 const updateDoc = async(req, res) => {
@@ -63,7 +63,11 @@ const updateDoc = async(req, res) => {
         residency,
         bio
     }, { runValidators: true, new: true })
-    res.status(200).json({ doc });
+    if (!doc) {
+        throw new NotFoundError('doctor not found')
+    }
+    res.status(StatusCodes.OK).json({ "msg": "success", "data": doc })
+
 }
 
 

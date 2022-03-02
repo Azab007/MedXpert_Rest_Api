@@ -31,13 +31,16 @@ const updateReview = async(req, res) => {
 const removeReview = async(req, res) => {
     const { rev_id } = req.body
     const rev = await Review.findByIdAndDelete(rev_id)
-    res.status(200).json({ rev })
+    if (!rev) {
+        throw new NotFoundError('review not found')
+    }
+    res.status(StatusCodes.OK).json({ "msg": "success", "data": rev })
 }
 
 const getReview = async(req, res) => {
     const { drug_id } = req.body
     const rev = await Review.find({ drug_id })
-    if (!rev) {
+    if (!rev.length) {
         throw new NotFoundError('no reviews yet')
     }
     res.status(StatusCodes.OK).json({ "msg": "success", "data": rev })
