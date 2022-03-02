@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator');
 const Patient = require('../models/Patient.js');
 const Doctor = require('../models/Doctor.js');
 const Pharma_Inc = require('../models/Pharma_Inc.js');
-const { NotFoundError, BadRequestError } = require('../errors')
+const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 
 const register = async(req, res, next) => {
@@ -67,45 +67,26 @@ const login = async(req, res, next) => {
     } else if (role === 'pharma_inc') {
         loaded = await Pharma_Inc.findOne({ email: email });
     } else {
-        const error = new Error('Log in Failed.');
-        error.statusCode = 422;
-        throw error
+        throw new BadRequestError("undefined role")
     }
 
 
-    try {
-
-        if (!loaded) {
-            const error = new Error('A user with this email could not be found.');
-            error.statusCode = 401;
-            throw error
-        }
-
-        const validPassword = await bcrypt.compare(password, loaded.password);
-        if (!validPassword) {
-            const error = new Error('Wrong password!');
-            error.statusCode = 401;
-            throw error
-
-        }
-        const token = jwt.sign({
-                email: loaded.email,
-                userId: loaded._id.toString(),
-                role: role
-            },
-            process.env.jwt_secret_key, { expiresIn: '1h' }
-        );
-        res.status(200).json({ token: token, userId: loaded._id.toString() });
-
-    } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
-        throw error
+    if (!loaded) {
+        throw new NotFoundError("account not found")
     }
 
-
-
+    const validPassword = await bcrypt.compare(password, loaded.password);
+    if (!validPassword) {
+        throw new UnauthenticatedError('Wrong password!');
+    }
+    const token = jwt.sign({
+            email: loaded.email,
+            userId: loaded._id.toString(),
+            role: role
+        },
+        process.env.jwt_secret_key, { expiresIn: '30d' }
+    );
+    res.status(StatusCodes.OK).json({ "msg": "success", token });
 
 }
 
