@@ -5,74 +5,55 @@ const { validationResult } = require('express-validator');
 const Patient = require('../models/Patient.js');
 const Doctor = require('../models/Doctor.js');
 const Pharma_Inc = require('../models/Pharma_Inc.js');
-
+const { NotFoundError, BadRequestError } = require('../errors')
+const { StatusCodes } = require('http-status-codes');
 
 const register = async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const error = new Error('Validation failed.');
-        error.statusCode = 422;
-        error.data = errors.array();
-        throw error;
+        throw new BadRequestError("data are invalid")
     }
-    const type = req.body.role;
-    delete req.body.role;
+    const { role } = req.body;
     const matched = req.body.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);
 
     if (!matched) {
-        const err = new Error("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character");
-        err.statusCode = 401;
-        throw err;
+        throw new BadRequestError("Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character");
     }
     const hasedPassword = await bcrypt.hash(req.body.password, 12);
-    try {
-        if (type === 'patient') {
-            const newPatient = new Patient({
-                ...req.body,
-                password: hasedPassword
 
-            });
+    if (role === 'patient') {
+        const newPatient = new Patient({
+            ...req.body,
+            password: hasedPassword
 
-            await newPatient.save();
-            res.status(201).json(newPatient);
-        } else if (type === 'doctor') {
-            const newDoctor = new Doctor({
-                ...req.body,
-                password: hasedPassword
+        });
 
-            });
+        await newPatient.save();
+        res.status(StatusCodes.CREATED).json({ "msg": "success", "data": newPatient });
+    } else if (role === 'doctor') {
+        const newDoctor = new Doctor({
+            ...req.body,
+            password: hasedPassword
 
-            await newDoctor.save();
-            res.status(201).json(newDoctor);
-        } else if (type === 'pharma_inc') {
-            const newPharma = new Pharma_Inc({
-                ...req.body,
-                password: hasedPassword
+        });
 
-            });
+        await newDoctor.save();
+        res.status(StatusCodes.CREATED).json({ "msg": "success", "data": newDoctor });
+    } else if (role === 'pharma_inc') {
+        const newPharma = new Pharma_Inc({
+            ...req.body,
+            password: hasedPassword
 
-            await newPharma.save();
-            res.status(201).json(newPharma);
-        } else {
-            const error = new Error('Validation failed.');
-            error.statusCode = 422;
-            return next(error)
-        }
+        });
 
-    } catch (err) {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        throw (err)
+        await newPharma.save();
+        res.status(StatusCodes.CREATED).json({ "msg": "success", "data": newPharma });
+    } else {
+        throw new BadRequestError("unknown role")
     }
 
 }
 
-// // just for testing
-// getall = async (req, res) => {
-//     const data = await Patient.find({})
-//     res.json({data})
-// }
 
 const login = async(req, res, next) => {
 
