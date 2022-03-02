@@ -25,7 +25,7 @@ const getAllPharmas = async(req, res) => {
 }
 
 const updatePharma = async(req, res) => {
-    const Pharma_id = req.query.id;
+    const Pharma_id = req.user.userId;
     const { email, username, Location } = req.body
     const Pharma = await Pharma_inc.findByIdAndUpdate(Pharma_id, { $set: { email, username, Location } }, { runValidators: true, new: true });
     if (!Pharma) {
@@ -38,7 +38,7 @@ const updatePharma = async(req, res) => {
 
 const deletePharma = async(req, res) => {
 
-    const Pharma_id = req.query.id;
+    const Pharma_id = req.user.userId;
     const Pharma = await Pharma_inc.findByIdAndRemove(Pharma_id, { runValidators: true, new: true });
     if (!Pharma) {
         throw new NotFoundError("no Pharma matches this id");

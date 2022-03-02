@@ -3,9 +3,14 @@ const { StatusCodes } = require('http-status-codes');
 const { default: mongoose } = require('mongoose');
 const { NotFoundError, BadRequestError } = require('../errors');
 const createMedication = async(req, res) => {
+    const docId = req.user.userId
+    const patientId = req.query.id
+    const { patient_id, ...others } = req.body
     try {
         const newMedication = new Medication({
-            ...req.body
+            ...others,
+            patient_id: patientId,
+            doctor_id: docId
         });
 
         await newMedication.save();
@@ -42,11 +47,15 @@ const getAllMedications = async(req, res) => {
 const updateMedication = async(req, res) => {
     const Medication_id = req.query.id;
     const { _id, drugs, ...others } = req.body
-    const medication = await Medication.findByIdAndUpdate(Medication_id, { $set: others }, { runValidators: true, new: true });
-    if (!medication) {
-        throw new NotFoundError("no Medication matches this id");
+    const MedFromDB = await Medication.findById(Medication_id);
+    if (!MedFromDB) {
+        throw new NotFoundError("no Medication matches this id")
     }
 
+    if (req.user.userId !== MedFromDB.doctor_id.toString()) {
+        throw new UnauthorizedError("you can update only your Medications")
+    }
+    const medication = await Medication.findByIdAndUpdate(Medication_id, { $set: others }, { runValidators: true, new: true });
     res.status(StatusCodes.OK).json({ "data": medication, msg: "the Medication is updated succesfully" });
 
 };
@@ -54,30 +63,45 @@ const updateMedication = async(req, res) => {
 
 const deleteMedication = async(req, res) => {
     const Medication_id = req.query.id;
-    const medication = await Medication.findByIdAndRemove(Medication_id);
-    if (!medication) {
-        throw new NotFoundError("no Medication matches this id");
+    const MedFromDB = await Medication.findById(Medication_id);
+    if (!MedFromDB) {
+        throw new NotFoundError("no Medication matches this id")
     }
+
+    if (req.user.userId !== MedFromDB.doctor_id.toString()) {
+        throw new UnauthorizedError("you can delete only your Medications")
+    }
+    await MedFromDB.deleteOne();
     res.status(StatusCodes.OK).json({ msg: "the Medication is deleted succesfully" });
 
 }
 
 const addMedicationDrug = async(req, res) => {
     const medication_id = req.query.id;
-    const medication = await Medication.findByIdAndUpdate(medication_id, { $addToSet: { drugs: req.body } }, { runValidators: true, new: true });
-    if (!medication) {
-        throw new NotFoundError("no Medication matches this id");
+    const MedFromDB = await Medication.findById(medication_id);
+    if (!MedFromDB) {
+        throw new NotFoundError("no Medication matches this id")
     }
+
+    if (req.user.userId !== MedFromDB.doctor_id.toString()) {
+        throw new UnauthorizedError("you can delete only your Medications")
+    }
+    const medication = await Medication.findByIdAndUpdate(medication_id, { $addToSet: { drugs: req.body } }, { runValidators: true, new: true });
     res.status(StatusCodes.OK).json({ "data": medication, msg: "the Medication drug is added succesfully" });
 
 }
 
 const deleteMedicationDrug = async(req, res) => {
     const medication_id = req.query.id;
-    const medication = await Medication.findByIdAndUpdate(medication_id, { $pull: { drugs: { drug_id: mongoose.Types.ObjectId(req.body.drug_id) } } }, { runValidators: true, new: true });
-    if (!medication) {
-        throw new NotFoundError("no medication matches this id");
+    const MedFromDB = await Medication.findById(medication_id);
+    if (!MedFromDB) {
+        throw new NotFoundError("no Medication matches this id")
     }
+
+    if (req.user.userId !== MedFromDB.doctor_id.toString()) {
+        throw new UnauthorizedError("you can delete only your Medications")
+    }
+    const medication = await Medication.findByIdAndUpdate(medication_id, { $pull: { drugs: { drug_id: mongoose.Types.ObjectId(req.body.drug_id) } } }, { runValidators: true, new: true });
     res.status(StatusCodes.OK).json({ "data": medication, msg: "the medication drug is deleted succesfully" });
 
 }

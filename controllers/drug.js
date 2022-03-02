@@ -1,11 +1,15 @@
 const Drug = require('../models/Drug.js')
 const { default: mongoose } = require('mongoose');
-const { NotFoundError, BadRequestError } = require('../errors')
+const { NotFoundError, BadRequestError, UnauthorizedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 const createDrug = async(req, res) => {
+    const pharma_id = req.user.userId;
+    const { inc_id, ...others } = req.body;
     try {
         const newDrug = new Drug({
-            ...req.body
+            ...others,
+            Inc_id: pharma_id
+
         });
 
         await newDrug.save();
@@ -40,15 +44,22 @@ const getAllDrugs = async(req, res) => {
 const updateDrug = async(req, res) => {
     const drug_id = req.query.id;
     const { interactions, restrictions, _id, ...others } = req.body
+    const drugFromDB = await Drug.findById(drug_id);
+    if (!drugFromDB) {
+        throw new NotFoundError("no drug matches this id")
+    }
+
+    if (req.user.userId !== drugFromDB.Inc_id.toString()) {
+        throw new UnauthorizedError("you can update only your drugs")
+    }
+
     const drug = await Drug.findByIdAndUpdate(drug_id, {
         $set: others
     }, {
         runValidators: true,
         new: true
     });
-    if (!drug) {
-        throw new NotFoundError("no drug matches this id")
-    }
+
 
     res.status(StatusCodes.OK).json({
         "data": drug,
@@ -60,10 +71,16 @@ const updateDrug = async(req, res) => {
 const deleteDrug = async(req, res) => {
 
     const drug_id = req.query.id;
-    const drug = await Drug.findByIdAndRemove(drug_id, { runValidators: true, new: true });
-    if (!drug) {
-        throw new NotFoundError("no drug matches this id ")
+    const drugFromDB = await Drug.findById(drug_id);
+
+    if (!drugFromDB) {
+        throw new NotFoundError("no drug matches this id")
     }
+
+    if (req.user.userId !== drugFromDB.Inc_id.toString()) {
+        throw new UnauthorizedError("you can delete only your drugs")
+    }
+    await drugFromDB.deleteOne();
     res.status(StatusCodes.OK).json({ msg: "the Drug is deleted succesfully" });
 
 
@@ -75,6 +92,14 @@ const addToList = async(req, res) => {
 
     const drug_id = req.query.id;
     const { interactions, restrictions } = req.body
+    const drugFromDB = await Drug.findById(drug_id);
+    if (!drugFromDB) {
+        throw new NotFoundError("no drug matches this id")
+    }
+
+    if (req.user.userId !== drugFromDB.Inc_id.toString()) {
+        throw new UnauthorizedError("you can add only to your lists")
+    }
     const newData = await Drug.findByIdAndUpdate(drug_id, {
         $addToSet: {
             interactions,
@@ -84,9 +109,6 @@ const addToList = async(req, res) => {
         runValidators: true,
         new: true
     });
-    if (!newData) {
-        throw new NotFoundError("no matches for this id");
-    }
 
     res.status(StatusCodes.OK).json({
         "data": newData,
@@ -99,6 +121,16 @@ const addToList = async(req, res) => {
 const deleteFromList = async(req, res) => {
 
     const id = req.query.id;
+    const drugFromDB = await Drug.findById(drug_id);
+    if (!drugFromDB) {
+        throw new NotFoundError("no drug matches this id")
+    }
+
+
+
+    if (req.user.userId !== drugFromDB.Inc_id.toString()) {
+        throw new UnauthorizedError("you can delete only from your lists")
+    }
     const {
         interactions: {
             drug_id = null
@@ -112,9 +144,6 @@ const deleteFromList = async(req, res) => {
         }
     } = req.body
     const newData = await Drug.findByIdAndUpdate(id, { $pull: { interactions: { "drug_id": drug_id }, restrictions: { "condition_name": condition_name } }, }, { runValidators: true, new: true });
-    if (!newData) {
-        throw new NotFoundError("no matches for this id");
-    }
     res.status(StatusCodes.OK).json({ "data": newData, msg: "the data is deleted succesfully" });
 }
 
