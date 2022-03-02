@@ -1,15 +1,19 @@
 const Drug = require('../models/Drug.js')
 const { default: mongoose } = require('mongoose');
-const { NotFoundError } = require('../errors')
+const { NotFoundError, BadRequestError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 const createDrug = async(req, res) => {
+    try {
+        const newDrug = new Drug({
+            ...req.body
+        });
 
-    const newDrug = new Drug({
-        ...req.body
-    });
+        await newDrug.save();
+        res.status(StatusCodes.CREATED).json(newDrug);
+    } catch (error) {
+        throw new BadRequestError(error.message)
+    }
 
-    await newDrug.save();
-    res.status(StatusCodes.CREATED).json(newDrug);
 
 }
 
@@ -26,14 +30,18 @@ const getDrug = async(req, res) => {
 
 const getAllDrugs = async(req, res) => {
     const drugs = await Drug.find({});
+    if (!drugs.length) {
+        throw new NotFoundError('no drugs in database')
+    }
     res.status(StatusCodes.OK).json(drugs);
 
 }
 
 const updateDrug = async(req, res) => {
     const drug_id = req.query.id;
+    const { interactions, restrictions, _id, ...others } = req.body
     const drug = await Drug.findByIdAndUpdate(drug_id, {
-        $set: req.body
+        $set: others
     }, {
         runValidators: true,
         new: true
@@ -91,16 +99,19 @@ const addToList = async(req, res) => {
 const deleteFromList = async(req, res) => {
 
     const id = req.query.id;
-    // const {drug_id} = req.body.interactions;
-    // const {condition_name} = req.body.restrictions;
-    // if (drug_id) {
-    //         const newData = await Drug.findByIdAndUpdate(id, {$pull: {interactions: {drug_id}, restrictions: {condition_name} }, }, { runValidators: true, new: true });
-    // }
-    // if(condition_name) {
-    //         const newData = await Drug.findByIdAndUpdate(id, {$pull: {interactions: {drug_id}, restrictions: {condition_name} }, }, { runValidators: true, new: true });
-    // }
-    const { interactions, restrictions } = req.body
-    const newData = await Drug.findByIdAndUpdate(id, { $pull: { interactions, restrictions }, }, { runValidators: true, new: true });
+    const {
+        interactions: {
+            drug_id = null
+        } = {
+            drug_id: null
+        },
+        restrictions: {
+            condition_name = "null"
+        } = {
+            condition_name: "null"
+        }
+    } = req.body
+    const newData = await Drug.findByIdAndUpdate(id, { $pull: { interactions: { "drug_id": drug_id }, restrictions: { "condition_name": condition_name } }, }, { runValidators: true, new: true });
     if (!newData) {
         throw new NotFoundError("no matches for this id");
     }

@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 //const Doctor = require('./Doctor.js');
-const arrayUniquePlugin = require('mongoose-unique-array'); 
 
 const DoctorSchema = new mongoose.Schema({
 
     email: {
-        type:String,
+        type: String,
         required: true,
         unique: true
     },
@@ -21,14 +20,13 @@ const DoctorSchema = new mongoose.Schema({
     specialization: [{
         type: String,
         enum: [],
-        required: true,
-        unique: true
+        required: true
     }],
 
     gender: {
-    type: String,
-    enum: ['male', 'female', 'other'],
-    required: true
+        type: String,
+        enum: ['male', 'female', 'other'],
+        required: true
     },
 
     residency: {
@@ -43,10 +41,7 @@ const DoctorSchema = new mongoose.Schema({
 
 
 
-},
-{timestamps: true}
-)
+}, { timestamps: true })
 
-DoctorSchema.plugin(arrayUniquePlugin);
 
 module.exports = mongoose.model('Doctor', DoctorSchema);
