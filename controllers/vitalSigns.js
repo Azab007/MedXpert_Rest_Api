@@ -4,9 +4,12 @@ const { default: mongoose } = require('mongoose');
 const { NotFoundError, BadRequestError } = require('../errors');
 
 const createVitalSign = async(req, res) => {
+    const patientId = req.user.userId;
+    const { _id, patient_id, ...others } = req.body;
     try {
         const newVitalSign = new VitalSign({
-            ...req.body
+            ...others,
+            patient_id: patientId
         });
 
         await newVitalSign.save();
@@ -41,12 +44,16 @@ const getAllVitalSigns = async(req, res) => {
 
 const updateVitalSign = async(req, res) => {
     const VitalSign_id = req.query.id;
-    const { _id, ...others } = req.body;
-    const vitalSign = await VitalSign.findByIdAndUpdate(VitalSign_id, { $set: others }, { runValidators: true, new: true });
-    if (!vitalSign) {
-        throw NotFoundError("no VitalSign matches this id");
+    const { _id, patient_id, ...others } = req.body;
+    const vitalFromDB = await VitalSign.findById(VitalSign_id);
+    if (!vitalFromDB) {
+        throw new NotFoundError("no vital sign matches this id")
     }
 
+    if (req.user.userId !== vitalFromDB.patient_id.toString()) {
+        throw new UnauthorizedError("you can update only your vital signs")
+    }
+    const vitalSign = await VitalSign.findByIdAndUpdate(VitalSign_id, { $set: others }, { runValidators: true, new: true });
     res.status(StatusCodes.OK).json({ "data": vitalSign, msg: "the VitalSign is updated succesfully" });
 
 };
@@ -54,10 +61,15 @@ const updateVitalSign = async(req, res) => {
 
 const deleteVitalSign = async(req, res) => {
     const VitalSign_id = req.query.id;
-    const vitalSign = await VitalSign.findByIdAndRemove(VitalSign_id);
-    if (!vitalSign) {
-        throw NotFoundError("no VitalSign matches this id", 404);
+    const vitalFromDB = await VitalSign.findById(VitalSign_id);
+    if (!vitalFromDB) {
+        throw new NotFoundError("no vital sign matches this id")
     }
+
+    if (req.user.userId !== vitalFromDB.patient_id.toString()) {
+        throw new UnauthorizedError("you can delete only your vital signs")
+    }
+    const vitalSign = await VitalSign.findByIdAndRemove(VitalSign_id);
     res.status(StatusCodes.OK).json({ msg: "the VitalSign is deleted succesfully" });
 
 }
