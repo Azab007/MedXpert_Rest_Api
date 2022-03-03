@@ -18,12 +18,13 @@ const addReview = async(req, res) => {
 
 const updateReview = async(req, res) => {
     const user_id = req.user.userId
-    const { rev_id, review, rating } = req.body
+    const rev_id = req.query.id
+    const { review, rating } = req.body
     const revcheck = await Review.findById(rev_id)
     if (!revcheck) {
         throw new NotFoundError('review not found')
     }
-    if (revcheck.user_id !== user_id) {
+    if (revcheck.user_id.toString() !== user_id) {
         throw new UnauthorizedError('not allowed')
     }
     const rev = await Review.findByIdAndUpdate(rev_id, {
@@ -35,7 +36,7 @@ const updateReview = async(req, res) => {
 
 const removeReview = async(req, res) => {
     const user_id = req.user.userId
-    const { rev_id } = req.body
+    const rev_id = req.query.id
     const revcheck = await Review.findById(rev_id)
     if (!revcheck) {
         throw new NotFoundError('review not found')
@@ -48,7 +49,7 @@ const removeReview = async(req, res) => {
 }
 
 const getReview = async(req, res) => {
-    const { drug_id } = req.body
+    const drug_id = req.query.id
     const rev = await Review.find({ drug_id })
     if (!rev.length) {
         throw new NotFoundError('no reviews yet')

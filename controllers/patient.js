@@ -3,7 +3,7 @@ const { NotFoundError, BadRequestError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 
 const getPatient = async(req, res) => {
-    const { id } = req.body;
+    const id = req.query.id;
     const patient = await Patient.findById(id);
     if (!patient) {
         throw new NotFoundError('patient not found')
@@ -67,7 +67,7 @@ const addToList = async(req, res) => {
     if (req.user.role === 'patient') {
         id = req.user.userId
     } else {
-        id = req.body.id
+        id = req.query.id
     }
     const {
         type,
@@ -94,7 +94,7 @@ const deleteFromList = async(req, res) => {
     if (req.user.role === 'patient') {
         id = req.user.userId
     } else {
-        id = req.body.id
+        id = req.query.id
     }
     const {
         type,
