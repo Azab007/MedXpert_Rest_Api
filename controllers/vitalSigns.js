@@ -28,6 +28,9 @@ const getVitalSign = async(req, res) => {
     if (!vitalSign) {
         throw new NotFoundError("no vital sign found for this id")
     }
+    if (req.user.userId !== vitalSign.patient_id.toString()) {
+        throw new UnauthorizedError("you can see only your vital signs")
+    }
     res.status(StatusCodes.OK).json({ "data": vitalSign, "msg": "success" });
 
 }

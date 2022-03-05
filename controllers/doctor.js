@@ -4,7 +4,7 @@ const { StatusCodes } = require('http-status-codes');
 
 const getDoc = async(req, res) => {
 
-    const doc_id = req.query.id;
+    const doc_id = req.user.userId;
     const doc = await Doctor.findById(doc_id);
     if (!doc) {
         throw new NotFoundError('doctor not found')
