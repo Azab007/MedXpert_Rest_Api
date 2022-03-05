@@ -21,6 +21,15 @@ const createDrug = async(req, res) => {
 
 }
 
+const getDrugNames = async(req, res) => {
+    if (!req.query.name) {
+        throw new BadRequestError("pls enter the drug name");
+    }
+    const regex = new RegExp(req.query.name, 'i');
+    var drugNames = await Drug.find({ drugName: regex }, { "drugName": 1 }).limit(5);
+    res.status(StatusCodes.OK).json({ "data": drugNames, "msg": "success" })
+}
+
 const getDrug = async(req, res) => {
     const drug_id = req.query.id;
     const drug = await Drug.findById(drug_id);
@@ -156,5 +165,6 @@ module.exports = {
     updateDrug,
     deleteDrug,
     addToList,
-    deleteFromList
+    deleteFromList,
+    getDrugNames
 };
