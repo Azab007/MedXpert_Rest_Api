@@ -1,0 +1,562 @@
+{
+	"info": {
+		"_postman_id": "8961e723-185b-470d-ae71-17fa68a3d266",
+		"name": "project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "{{URL}}/auth/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"role\": \"doctor\",\r\n    \"email\": \"tsat1aa2@tst.com\",\r\n    \"password\": \"moAzab02040608010@\",\r\n    \"gender\":\"male\",\r\n    \"username\":\"test\",\r\n    \"birthDate\":\"1-5-2005\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/auth/register",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/auth/register",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/auth/register",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/auth/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"role\": \"patient\",\r\n    \"email\": \"tsat1aa2@tst.com\",\r\n    \"password\": \"moAzab02040608010@\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/auth/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/doctor/getAllDoctors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/doctor/getAllDoctors",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"doctor",
+						"getAllDoctors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/doctor/getDoctor",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"doc_id\":\"621f91dcc0643f75387e63cf\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/doctor/getDoctor",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"doctor",
+						"getDoctor"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/doctor/deleteDoctor",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"doc_id\":\"621e17e01764b4d4149a9c1f\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/doctor/deleteDoctor",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"doctor",
+						"deleteDoctor"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/doctor/addSpecialization",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"621e17e01764b4d4149a9c1f\",\r\n    \"specialization\":\"aa\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/doctor/addSpecialization",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"doctor",
+						"addSpecialization"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "621d06d38368e63c16bc7786",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/doctor/deleteSpecialization",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"621e17e01764b4d4149a9c1f\",\r\n    \"specialization\":\"aa\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/doctor/deleteSpecialization",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"doctor",
+						"deleteSpecialization"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/doctor/updateDoc",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"621e17e01764b4d4149a9c1f\",\r\n    \"residency\":\"tanta\",\r\n    \"bio\" : \"lalalalal\",\r\n    \"username\": \"abdaaao\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/doctor/updateDoc",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"doctor",
+						"updateDoc"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/patient/getAllPatients",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/patient/getAllPatients",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"patient",
+						"getAllPatients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/patient/getPatient",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/patient/getPatient?id=621f96c8641f2b8fa4ef2435",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"patient",
+						"getPatient"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "621f96c8641f2b8fa4ef2435"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/patient/updatePatient",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"621e025501bfb00958b46835\",\r\n    \"username\":\"azab\",\r\n     \"birthDate\":\"4-2-1800\", \r\n     \"weight\":\"5\",\r\n      \"residency\":\"aaaa\",\r\n      \"gender\":\"other\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/patient/updatePatient",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"patient",
+						"updatePatient"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/patient/addToList",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"followers\":\"621f96c8641f2b8fa4ef2435\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/patient/addToList",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"patient",
+						"addToList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/patient/deleteFromList",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n    \"followers\":\"621f96c8641f2b8fa4ef2435\"\r\n\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/patient/deleteFromList",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"patient",
+						"deleteFromList"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/review/update",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"rev_id\":\"621f5bae31fec7a3c542193c\",\r\n    \"review\":\"halalalalala\",\r\n    \"rating\":\"9.5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/review/updateReview",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"review",
+						"updateReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/review/deleteReview",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"rev_id\":\"621f58f6f517de01978604be\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/review/deleteReview",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"review",
+						"deleteReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/review/",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"drug_id\":\"621e17e01764b4d4149a9c1f\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/review/getReview",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"review",
+						"getReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/review/createReview",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"drug_id\":\"621e17e01764b4d4149a9c1f\",\r\n    \"user_id\":\"621e17e01764b4d4149a9c1a\",\r\n    \"review\":\"ssssssssssss\",\r\n    \"rating\":\"4\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/review/createReview",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"review",
+						"createReview"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/medication/getFollowingMedication?id=621f9587641f2b8fa4ef242e",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/medication/getFollowingMedication?id=621f96e5641f2b8fa4ef243a",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"medication",
+						"getFollowingMedication"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "621f96e5641f2b8fa4ef243a"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/medication/getAllMedications",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/medication/getAllMedications",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"medication",
+						"getAllMedications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/patient/useInvitation?code=333533",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/patient/useInvitation?code=403980",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"patient",
+						"useInvitation"
+					],
+					"query": [
+						{
+							"key": "code",
+							"value": "403980"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{URL}}/patient/createInvitation",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/patient/createInvitation",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"patient",
+						"createInvitation"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
