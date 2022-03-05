@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const DrugSchema = new mongoose.Schema({
+const InvitaionsSchema = new mongoose.Schema({
     invitaionNumber: {
         type: String,
         required: true,
@@ -15,4 +15,4 @@ const DrugSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 
-module.exports = mongoose.model('Invitations', DrugSchema);
+module.exports = mongoose.model('Invitations', InvitaionsSchema);
