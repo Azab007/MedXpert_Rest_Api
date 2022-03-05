@@ -96,6 +96,8 @@ const addToList = async(req, res) => {
     res.status(StatusCodes.OK).json({ "msg": "success", "data": patient })
 }
 
+
+
 const deleteFromList = async(req, res) => {
     let id;
     if (req.user.role === 'patient') {
@@ -124,6 +126,19 @@ const deleteFromList = async(req, res) => {
 }
 
 
+const createInvitation = async(req, res) => {
+    const code = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    const id = req.user.userId
+    res.status(StatusCodes.OK).json({ "msg": "success", "data": code })
+}
+
+const useInvitation = async(req, res) => {
+    const invitation = req.query.code
+    const myId = req.user.userId
+
+}
+
+
 
 
 
@@ -133,5 +148,6 @@ module.exports = {
     updatePatient,
     addToList,
     deleteFromList,
-    deletePatient
+    deletePatient,
+    createInvitation
 }

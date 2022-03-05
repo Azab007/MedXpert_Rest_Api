@@ -5,7 +5,8 @@ const {
     updatePatient,
     addToList,
     deleteFromList,
-    deletePatient
+    deletePatient,
+    createInvitation
 } = require('../controllers/patient')
 
 const {
@@ -22,7 +23,7 @@ router.route("/updatePatient").patch(authenticateUser, isPatient, updatePatient)
 router.route("/addToList").patch(authenticateUser, isPatientorDoctor, addToList)
 router.route("/deleteFromList").patch(authenticateUser, isPatient, deleteFromList)
 router.route("/deletePatient").delete(authenticateUser, isPatient, deletePatient)
-
+router.route("/createInvitation").get(authenticateUser, isPatient, createInvitation)
 
 
 
