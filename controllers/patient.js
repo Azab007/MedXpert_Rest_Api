@@ -133,11 +133,14 @@ const useInvitation = async(req, res) => {
     const invitaionNumber = req.query.code
     const myId = req.user.userId
     const invitation = await Invitation.findOneAndDelete({ invitaionNumber })
-    const followingId = invitation.patient_id
-    let diff = new Date() - new Date(invitation.createdAt);
-    if (diff > 1000 * 60 * 5) { // 5 minutes
-        throw new BadRequestError("out of date")
+    if (!invitation) {
+        throw new NotFoundError("this invitaions has expired, pls create a new one");
     }
+    const followingId = invitation.patient_id
+        // let diff = new Date() - new Date(invitation.createdAt);
+        // if (diff > 1000 * 60 * 5) { // 5 minutes
+        //     throw new BadRequestError("out of date")
+        // }
     await Patient.findByIdAndUpdate(myId, {
         $addToSet: {
             followings: followingId

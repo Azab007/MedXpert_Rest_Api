@@ -14,6 +14,6 @@ const InvitaionsSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-InvitaionsSchema.index({ createdAt: 1 }, { expireAfterSeconds: 30 });
+InvitaionsSchema.index({ createdAt: 1 }, { expireAfterSeconds: 300 });
 
 module.exports = mongoose.model('Invitations', InvitaionsSchema);
