@@ -1,4 +1,5 @@
 const Patient = require('../models/Patient')
+const Invitation = require('../models/invitations')
 const { NotFoundError, BadRequestError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 
@@ -71,14 +72,12 @@ const addToList = async(req, res) => {
     }
     const {
         type,
-        followers,
         clinicians,
         chronics
     } = req.body
     const patient = await Patient.findByIdAndUpdate(id, {
         $addToSet: {
             type,
-            followers,
             clinicians,
             chronics
         }
@@ -86,13 +85,7 @@ const addToList = async(req, res) => {
     if (!patient) {
         throw new NotFoundError('patient not found')
     }
-    if (followers) {
-        const follower = await Patient.findByIdAndUpdate(followers, {
-            $addToSet: {
-                followings: id
-            }
-        }, { runValidators: true, new: true })
-    }
+
     res.status(StatusCodes.OK).json({ "msg": "success", "data": patient })
 }
 
@@ -127,14 +120,33 @@ const deleteFromList = async(req, res) => {
 
 
 const createInvitation = async(req, res) => {
-    const code = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
-    const id = req.user.userId
-    res.status(StatusCodes.OK).json({ "msg": "success", "data": code })
+    const invitaionNumber = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    const patient_id = req.user.userId
+    await Invitation.deleteMany({ patient_id });
+    const data = new Invitation({ invitaionNumber, patient_id })
+    await data.save()
+    res.status(StatusCodes.OK).json({ "msg": "success", "data": data })
 }
 
 const useInvitation = async(req, res) => {
-    const invitation = req.query.code
+    const invitaionNumber = req.query.code
     const myId = req.user.userId
+    const invitation = await Invitation.findOneAndDelete({ invitaionNumber })
+    const followingId = invitation.patient_id
+
+    await Patient.findByIdAndUpdate(myId, {
+        $addToSet: {
+            followings: followingId
+        }
+    }, { runValidators: true, new: true })
+
+    await Patient.findByIdAndUpdate(followingId, {
+        $addToSet: {
+            followers: myId
+        }
+    }, { runValidators: true, new: true })
+
+    res.status(StatusCodes.OK).json({ "msg": "success" })
 
 }
 
@@ -149,5 +161,6 @@ module.exports = {
     addToList,
     deleteFromList,
     deletePatient,
-    createInvitation
+    createInvitation,
+    useInvitation
 }
