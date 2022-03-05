@@ -1,6 +1,6 @@
 const Patient = require('../models/Patient')
 const Invitation = require('../models/invitations')
-const { NotFoundError, BadRequestError } = require('../errors')
+const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 
 const getPatient = async(req, res) => {
@@ -126,6 +126,7 @@ const createInvitation = async(req, res) => {
     const data = new Invitation({ invitaionNumber, patient_id })
     await data.save()
     res.status(StatusCodes.OK).json({ "msg": "success", "data": data })
+
 }
 
 const useInvitation = async(req, res) => {
@@ -133,7 +134,10 @@ const useInvitation = async(req, res) => {
     const myId = req.user.userId
     const invitation = await Invitation.findOneAndDelete({ invitaionNumber })
     const followingId = invitation.patient_id
-
+    let diff = new Date() - new Date(invitation.createdAt);
+    if (diff > 1000 * 60 * 5) { // 5 minutes
+        throw new BadRequestError("out of date")
+    }
     await Patient.findByIdAndUpdate(myId, {
         $addToSet: {
             followings: followingId
