@@ -3,7 +3,7 @@ const { NotFoundError, BadRequestError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 
 const getPatient = async(req, res) => {
-    const id = req.query.id;
+    const id = req.user.userId;
     const patient = await Patient.findById(id);
     if (!patient) {
         throw new NotFoundError('patient not found')
