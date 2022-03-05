@@ -86,6 +86,13 @@ const addToList = async(req, res) => {
     if (!patient) {
         throw new NotFoundError('patient not found')
     }
+    if (followers) {
+        const follower = await Patient.findByIdAndUpdate(followers, {
+            $addToSet: {
+                followings: id
+            }
+        }, { runValidators: true, new: true })
+    }
     res.status(StatusCodes.OK).json({ "msg": "success", "data": patient })
 }
 
