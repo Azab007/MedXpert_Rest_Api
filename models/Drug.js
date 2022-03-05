@@ -4,8 +4,9 @@ const _ = require('underscore');
 const DrugSchema = new mongoose.Schema({
 
     Inc_id: {
-        type: mongoose.Types.ObjectId, ref: 'Pharma_Inc',
-         required: true
+        type: mongoose.Types.ObjectId,
+        ref: 'Pharma_Inc',
+        required: true
     },
     drugName: {
         type: String,
@@ -36,40 +37,48 @@ const DrugSchema = new mongoose.Schema({
         type: String
     },
 
-    interactions: [{drug_id:{
-        type: mongoose.Types.ObjectId, required: true, ref: 'Drug'
+    interactions: [{
+        drug_id: {
+            type: mongoose.Types.ObjectId,
+            required: true,
+            ref: 'Drug'
 
-    }, description: {
-        type: String,
-        required: true
-    },
-    level: {
-        type: String
-    },
-    _id : false}],
+        },
+        description: {
+            type: String,
+            required: true
+        },
+        level: {
+            type: String
+        },
+        _id: false
+    }],
 
-    restrictions: [{condition_name:{
-        type: String,
-        required: true
-        
+    restrictions: [{
+        condition_name: {
+            type: String,
+            required: true
 
-    }, description: {
-        type: String,
-        required: true
-    },
-    level: {
-        type: String
-    },
-    _id : false
+
+        },
+        description: {
+            type: String,
+            required: true
+        },
+        level: {
+            type: String
+        },
+        currentlyTaken: {
+            type: Boolean,
+        },
+        _id: false
     }]
 
 
 
 
 
-},
-{timestamps: true}
-)
+}, { timestamps: true })
 
 
 module.exports = mongoose.model('Drug', DrugSchema);

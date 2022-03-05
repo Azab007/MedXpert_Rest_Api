@@ -43,6 +43,7 @@ const PatientSchema = new mongoose.Schema({
     },
 
     followers: [{ type: mongoose.Types.ObjectId, ref: 'Patient' }],
+    followings: [{ type: mongoose.Types.ObjectId, ref: 'Patient' }],
 
     clinicians: [{
         doctor_id: {
