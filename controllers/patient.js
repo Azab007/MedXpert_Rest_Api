@@ -2,6 +2,10 @@ const Patient = require('../models/Patient')
 const Invitation = require('../models/invitations')
 const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
+const { default: axios } = require('axios');
+const { parseString } = require("xml2js");
+
+
 
 const getPatient = async(req, res) => {
     const id = req.user.userId;
@@ -157,7 +161,28 @@ const useInvitation = async(req, res) => {
 
 }
 
+const getArticles = async(req, res) => {
+    const id = req.user.userId;
+    const patient = await Patient.findById(id);
+    let chronics = [];
+    if (patient.chronics.length) {
+        chronics = patient.chronics.map(chronic => {
+            return chronic.chronic_name
+        })
+    }
 
+
+    const respnse = await axios.get(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${chronics.join("[MeSH Terms] AND ")}&retmax=100 `)
+    parseString(respnse.data, function(err, result) {
+        const Ids = result.eSearchResult.IdList[0].Id ? result.eSearchResult.IdList[0].Id : []
+        const Links = Ids.map((id) => {
+            return `https://pubmed.ncbi.nlm.nih.gov/${id}/`
+        })
+
+        res.status(StatusCodes.OK).json({ "data": Links, "msg": "success" })
+    });
+
+}
 
 
 
@@ -169,5 +194,6 @@ module.exports = {
     deleteFromList,
     deletePatient,
     createInvitation,
-    useInvitation
+    useInvitation,
+    getArticles
 }
