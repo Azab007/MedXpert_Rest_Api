@@ -123,6 +123,8 @@ const updateMedication = async(req, res) => {
     }
     const medication = await Medication.findByIdAndUpdate(Medication_id, { $set: others }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
+
+
     const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
         "data": medication,
@@ -161,7 +163,7 @@ const addMedicationDrug = async(req, res) => {
     }
     const medication = await Medication.findByIdAndUpdate(medication_id, { $addToSet: { drugs: req.body } }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
-    const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
+    const restrictions = await checkRestrictions(medication.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
         "data": medication,
         msg: "the Medication drug is added succesfully",
@@ -183,7 +185,7 @@ const deleteMedicationDrug = async(req, res) => {
     }
     const medication = await Medication.findByIdAndUpdate(medication_id, { $pull: { drugs: { drug_id: mongoose.Types.ObjectId(req.body.drug_id) } } }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
-    const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
+    const restrictions = await checkRestrictions(medication.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
         "data": medication,
         msg: "the medication drug is deleted succesfully",
