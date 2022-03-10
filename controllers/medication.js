@@ -133,8 +133,9 @@ const addMedicationDrug = async(req, res) => {
     const interactions = await checkInteractions(medication.drugs)
     res.status(StatusCodes.OK).json({
         "data": medication,
-        msg: "the Medication drug is added succesfully"
-    }, interactions);
+        msg: "the Medication drug is added succesfully",
+        interactions
+    });
 
 }
 
