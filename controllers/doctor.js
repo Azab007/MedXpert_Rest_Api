@@ -1,4 +1,6 @@
 const Doctor = require('../models/Doctor')
+const Patient = require('../models/Patient')
+const Invitation = require('../models/invitations')
 const { NotFoundError, UnauthorizedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 
@@ -76,6 +78,32 @@ const updateDoc = async(req, res) => {
 }
 
 
+const useInvitation = async(req, res) => {
+    const invitaionNumber = req.query.code
+    const myId = req.user.userId
+    const invitation = await Invitation.findOneAndDelete({ invitaionNumber })
+    if (!invitation) {
+        throw new NotFoundError("this invitaions has expired, pls create a new one");
+    }
+    const followingId = invitation.patient_id
+
+    await Doctor.findByIdAndUpdate(myId, {
+        $addToSet: {
+            followings: followingId
+        }
+    }, { runValidators: true, new: true })
+
+    await Patient.findByIdAndUpdate(followingId, {
+        $addToSet: {
+            clinicians: myId
+        }
+    }, { runValidators: true, new: true })
+
+    res.status(StatusCodes.OK).json({ "msg": "success" })
+
+}
+
+
 
 
 module.exports = {
@@ -84,5 +112,6 @@ module.exports = {
     deleteDoc,
     addSpecialization,
     deleteSpecialization,
-    updateDoc
+    updateDoc,
+    useInvitation
 };
