@@ -3,6 +3,7 @@ const Patient = require('../models/Patient')
 const { StatusCodes } = require('http-status-codes');
 const { default: mongoose } = require('mongoose');
 const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../errors');
+const Doctor = require('../models/Doctor.js');
 
 
 const createMedication = async(req, res) => {
@@ -112,7 +113,7 @@ const deleteMedicationDrug = async(req, res) => {
 const getFollowingMedication = async(req, res) => {
     const followingid = req.query.id;
     const myid = req.user.userId;
-    const me = await Patient.findById(myid);
+    const me = req.user.role === 'patient' ? await Patient.findById(myid) : await Doctor.findById(myid);
     const followingIds = me.followings.map(id => id.toString())
     if (!followingIds.includes(followingid)) {
         throw UnauthenticatedError("you can not access this data")

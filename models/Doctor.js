@@ -41,6 +41,15 @@ const DoctorSchema = new mongoose.Schema({
         type: String
     },
 
+    followings: [{
+        patient_id: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Patient'
+        },
+        date: { type: Date, default: Date.now },
+        _id: false
+    }]
+
 
 
 

@@ -1,7 +1,7 @@
 const VitalSign = require('../models/VitalSigns.js')
 const { StatusCodes } = require('http-status-codes');
 const { default: mongoose } = require('mongoose');
-const { NotFoundError, BadRequestError } = require('../errors');
+const { NotFoundError, BadRequestError, UnauthorizedError } = require('../errors');
 
 const createVitalSign = async(req, res) => {
     const patientId = req.user.userId;
@@ -23,15 +23,20 @@ const createVitalSign = async(req, res) => {
 }
 
 const getVitalSign = async(req, res) => {
-    const VitalSign_id = req.query.id;
-    const vitalSign = await VitalSign.findById(VitalSign_id);
-    if (!vitalSign) {
-        throw new NotFoundError("no vital sign found for this id")
+    const search = (arr, key) => (arr.find(x => x.doctor_id.toString() === key))
+
+    const patient_id = req.user.role === 'patient' ? req.user.userId : req.query.id;
+    const vitalSigns = await VitalSign.find({ patient_id: patient_id });
+    if (!vitalSigns.length) {
+        throw new NotFoundError("no vital signs found for this id")
     }
-    if (req.user.userId !== vitalSign.patient_id.toString()) {
-        throw new UnauthorizedError("you can see only your vital signs")
+
+    const vital = await vitalSigns[0].populate('patient_id', '-password');
+    const clinicians = vital.patient_id.clinicians
+    if (req.user.role === 'doctor' && !search(clinicians, req.user.userId)) {
+        throw new UnauthorizedError("you can see only your patients vital signs")
     }
-    res.status(StatusCodes.OK).json({ "data": vitalSign, "msg": "success" });
+    res.status(StatusCodes.OK).json({ "data": vitalSigns, "msg": "success" });
 
 }
 
