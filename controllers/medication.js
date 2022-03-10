@@ -27,13 +27,34 @@ const checkInteractions = async(drugList) => {
     return Object.values(Interactions)
 }
 
+const checkRestrictions = async(drugList, patientID) => {
+    const { chronics } = await Patient.findById(patientID);
+    const chronicNames = chronics.map(chronic => chronic.chronic_name)
+    const drugsIDs = drugList.map(drug => drug.drug_id)
+
+    let Restrections = []
+    for (const drugID of drugsIDs) {
+        let { restrictions } = await Drug.findById(drugID);
+        restrictions = restrictions.map(item => item.condition_name)
+        for (const chronicName of chronicNames) {
+            if (restrictions.includes(chronicName)) {
+                Restrections.push({
+                    "id": drugID,
+                    "chronic": chronicName
+                })
+            }
+        }
+    }
+    return Restrections
+
+}
+
 
 const createMedication = async(req, res) => {
     const docId = req.user.userId
     const patientId = req.query.id
     const { patient_id, ...others } = req.body
 
-    const interactions = await checkInteractions(others.drugs)
 
     try {
         const newMedication = new Medication({
@@ -43,10 +64,15 @@ const createMedication = async(req, res) => {
         });
 
         await newMedication.save();
+        const interactions = await checkInteractions(others.drugs)
+        const restrictions = await checkRestrictions(others.drugs, patientId)
+
+        // console.log(interactions)
         res.status(StatusCodes.CREATED).json({
             "data": newMedication,
             "msg": "Medication created successfully",
-            interactions
+            interactions,
+            restrictions
         });
 
     } catch (error) {
@@ -63,10 +89,12 @@ const getMedication = async(req, res) => {
         throw new NotFoundError("no medication found for this id")
     }
     const interactions = await checkInteractions(medication.drugs)
+    const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
         "data": medication,
         "msg": "success",
-        interactions
+        interactions,
+        restrictions
     });
 
 }
@@ -95,10 +123,12 @@ const updateMedication = async(req, res) => {
     }
     const medication = await Medication.findByIdAndUpdate(Medication_id, { $set: others }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
+    const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
         "data": medication,
         msg: "the Medication is updated succesfully",
-        interactions
+        interactions,
+        restrictions
     });
 
 };
@@ -131,10 +161,12 @@ const addMedicationDrug = async(req, res) => {
     }
     const medication = await Medication.findByIdAndUpdate(medication_id, { $addToSet: { drugs: req.body } }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
+    const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
         "data": medication,
         msg: "the Medication drug is added succesfully",
-        interactions
+        interactions,
+        restrictions
     });
 
 }
@@ -151,10 +183,12 @@ const deleteMedicationDrug = async(req, res) => {
     }
     const medication = await Medication.findByIdAndUpdate(medication_id, { $pull: { drugs: { drug_id: mongoose.Types.ObjectId(req.body.drug_id) } } }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
+    const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
         "data": medication,
         msg: "the medication drug is deleted succesfully",
-        interactions
+        interactions,
+        restrictions
     });
 
 }
@@ -169,10 +203,12 @@ const getFollowingMedication = async(req, res) => {
     }
     const Medications = await Medication.find({ "patient_id": followingid, "currentlyTaken": true });
     const interactions = await checkInteractions(medication.drugs)
+    const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
         "data": Medications,
         msg: "success",
-        interactions
+        interactions,
+        restrictions
     });
 }
 
