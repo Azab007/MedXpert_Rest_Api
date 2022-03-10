@@ -77,6 +77,7 @@ const updateDoc = async(req, res) => {
 
 
 
+
 module.exports = {
     getDoc,
     getAllDoc,

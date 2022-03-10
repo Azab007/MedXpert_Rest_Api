@@ -5,7 +5,7 @@ const { StatusCodes } = require('http-status-codes');
 const { default: mongoose } = require('mongoose');
 const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../errors');
 const { object } = require('underscore');
-
+const Doctor = require('../models/Doctor.js');
 
 const checkInteractions = async(drugList) => {
     const drugsIDs = drugList.map(drug => drug.drug_id)
