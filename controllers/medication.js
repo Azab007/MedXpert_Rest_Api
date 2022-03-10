@@ -1,14 +1,40 @@
 const Medication = require('../models/Medication.js')
+const Drug = require('../models/Drug')
 const Patient = require('../models/Patient')
 const { StatusCodes } = require('http-status-codes');
 const { default: mongoose } = require('mongoose');
 const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../errors');
+const { object } = require('underscore');
+
+
+const checkInteractions = async(drugList) => {
+    const drugsIDs = drugList.map(drug => drug.drug_id)
+    let Interactions = new object
+    for (const drugID of drugsIDs) {
+        const { interactions } = await Drug.findById(drugID);
+        interactions.forEach(drug => {
+            if (drugsIDs.includes(drug.drug_id.toString())) {
+                const { drug_id, description, level } = drug
+                IDs = [drugID, drug_id.toString()].sort()
+                Interactions[IDs[0].concat(IDs[1])] = {
+                    IDs,
+                    description,
+                    level
+                }
+            }
+        })
+    }
+    return Object.values(Interactions)
+}
 
 
 const createMedication = async(req, res) => {
     const docId = req.user.userId
     const patientId = req.query.id
     const { patient_id, ...others } = req.body
+
+    const interactions = await checkInteractions(others.drugs)
+
     try {
         const newMedication = new Medication({
             ...others,
@@ -17,7 +43,11 @@ const createMedication = async(req, res) => {
         });
 
         await newMedication.save();
-        res.status(StatusCodes.CREATED).json({ "data": newMedication, "msg": "Medication created successfully" });
+        res.status(StatusCodes.CREATED).json({
+            "data": newMedication,
+            "msg": "Medication created successfully",
+            interactions
+        });
 
     } catch (error) {
         throw new BadRequestError(error.message);
@@ -32,7 +62,12 @@ const getMedication = async(req, res) => {
     if (!medication) {
         throw new NotFoundError("no medication found for this id")
     }
-    res.status(StatusCodes.OK).json({ "data": medication, "msg": "success" });
+    const interactions = await checkInteractions(medication.drugs)
+    res.status(StatusCodes.OK).json({
+        "data": medication,
+        "msg": "success",
+        interactions
+    });
 
 }
 
@@ -59,7 +94,12 @@ const updateMedication = async(req, res) => {
         throw new UnauthorizedError("you can update only your Medications")
     }
     const medication = await Medication.findByIdAndUpdate(Medication_id, { $set: others }, { runValidators: true, new: true });
-    res.status(StatusCodes.OK).json({ "data": medication, msg: "the Medication is updated succesfully" });
+    const interactions = await checkInteractions(medication.drugs)
+    res.status(StatusCodes.OK).json({
+        "data": medication,
+        msg: "the Medication is updated succesfully",
+        interactions
+    });
 
 };
 
@@ -90,7 +130,11 @@ const addMedicationDrug = async(req, res) => {
         throw new UnauthorizedError("you can delete only your Medications")
     }
     const medication = await Medication.findByIdAndUpdate(medication_id, { $addToSet: { drugs: req.body } }, { runValidators: true, new: true });
-    res.status(StatusCodes.OK).json({ "data": medication, msg: "the Medication drug is added succesfully" });
+    const interactions = await checkInteractions(medication.drugs)
+    res.status(StatusCodes.OK).json({
+        "data": medication,
+        msg: "the Medication drug is added succesfully"
+    }, interactions);
 
 }
 
@@ -105,7 +149,12 @@ const deleteMedicationDrug = async(req, res) => {
         throw new UnauthorizedError("you can delete only your Medications")
     }
     const medication = await Medication.findByIdAndUpdate(medication_id, { $pull: { drugs: { drug_id: mongoose.Types.ObjectId(req.body.drug_id) } } }, { runValidators: true, new: true });
-    res.status(StatusCodes.OK).json({ "data": medication, msg: "the medication drug is deleted succesfully" });
+    const interactions = await checkInteractions(medication.drugs)
+    res.status(StatusCodes.OK).json({
+        "data": medication,
+        msg: "the medication drug is deleted succesfully",
+        interactions
+    });
 
 }
 
@@ -118,7 +167,12 @@ const getFollowingMedication = async(req, res) => {
         throw UnauthenticatedError("you can not access this data")
     }
     const Medications = await Medication.find({ "patient_id": followingid, "currentlyTaken": true });
-    res.status(StatusCodes.OK).json({ "data": Medications, msg: "success" });
+    const interactions = await checkInteractions(medication.drugs)
+    res.status(StatusCodes.OK).json({
+        "data": Medications,
+        msg: "success",
+        interactions
+    });
 }
 
 
