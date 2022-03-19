@@ -2,7 +2,7 @@ const CustomError = require('../errors');
 const jwt = require('jsonwebtoken');
 
 const authenticateUser = async(req, res, next) => {
-    const token = req.signedCookies.token;
+    const token = req.headers["authorization"].split("Bearer ")[1];
 
     if (!token) {
         throw new CustomError.UnauthenticatedError('Authentication Invalid');

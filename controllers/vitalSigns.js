@@ -68,20 +68,23 @@ const getVitalSign = async(req, res) => {
     const search = (arr, key) => (arr.find(x => x.doctor_id.toString() === key))
 
     const patient_id = req.user.role === 'patient' ? req.user.userId : req.query.id;
-    const vitalSigns = await VitalSign.findOne({ patient_id: patient_id }, {}, { sort: { 'createdAt': -1 } });
-    if (!vitalSigns) {
+    const vitalSigns = await VitalSign.find({ patient_id: patient_id }, {}, { sort: { 'createdAt': -1 }, limit: 5 });
+    const resData = [...vitalSigns]
+    if (!vitalSigns.length) {
         throw new NotFoundError("no vital signs found for this id")
     }
+    if (req.user.role === 'doctor') {
+        for (let i = 0; i < vitalSigns.length; i++) {
+            const vital = await vitalSigns[i].populate('patient_id', 'clinicians');
+            const clinicians = vital.patient_id.clinicians
+            if (!search(clinicians, req.user.userId)) {
+                throw new UnauthorizedError("you can see only your patients vital signs")
+            }
+        }
 
-    const vital = await vitalSigns.populate('patient_id', '-password');
-    const clinicians = vital.patient_id.clinicians
-    if (req.user.role === 'doctor' && !search(clinicians, req.user.userId)) {
-        throw new UnauthorizedError("you can see only your patients vital signs")
     }
-
     const problems = checkVitalSigns(vitalSigns);
-
-    res.status(StatusCodes.OK).json({ "data": vitalSigns, "msg": "success", problems });
+    res.status(StatusCodes.OK).json({ "data": resData, "msg": "success", problems });
 
 }
 
