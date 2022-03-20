@@ -83,8 +83,8 @@ const getVitalSign = async(req, res) => {
         }
 
     }
-    const problems = checkVitalSigns(vitalSigns);
-    res.status(StatusCodes.OK).json({ "data": resData, "msg": "success", problems });
+    //const problems = checkVitalSigns(vitalSigns);
+    res.status(StatusCodes.OK).json({ "data": resData, "msg": "success" });
 
 }
 
