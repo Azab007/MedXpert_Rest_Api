@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const VitalSignsSchema = new mongoose.Schema({
 
     patient_id: {
@@ -27,7 +26,12 @@ const VitalSignsSchema = new mongoose.Schema({
     weight: {
         type: mongoose.Types.Decimal128,
         max: 250
-    }
+    },
+
+    problems: [{
+        type: String,
+        enum: ['condition', "temp", "pulse", "respration", "pressure", "weight"]
+    }]
 
 
 
