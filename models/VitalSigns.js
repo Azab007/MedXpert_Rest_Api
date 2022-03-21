@@ -30,7 +30,7 @@ const VitalSignsSchema = new mongoose.Schema({
 
     problems: [{
         type: String,
-        enum: ['condition', "temp", "pulse", "respration", "pressure", "weight"]
+        enum: ["temp", "pulse", "respration", "pressure", "weight"]
     }]
 
 
