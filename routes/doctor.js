@@ -5,7 +5,8 @@ const {
     deleteDoc,
     addSpecialization,
     deleteSpecialization,
-    updateDoc
+    updateDoc,
+    useInvitation
 } = require('../controllers/doctor.js')
 
 const {
@@ -19,6 +20,7 @@ router.route('/deleteDoctor').delete(authenticateUser, isDoctor, deleteDoc)
 router.route('/addSpecialization').patch(authenticateUser, isDoctor, addSpecialization)
 router.route('/deleteSpecialization').patch(authenticateUser, isDoctor, deleteSpecialization)
 router.route('/updateDoc').patch(authenticateUser, isDoctor, updateDoc)
+router.route('/useInvitation').post(authenticateUser, isDoctor, useInvitation)
 
 
 
