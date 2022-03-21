@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Double = require('@mongoosejs/double');
+
 
 const MedicationSchema = new mongoose.Schema({
 
@@ -12,7 +14,7 @@ const MedicationSchema = new mongoose.Schema({
             },
 
             dose: {
-                type: mongoose.Types.Decimal128,
+                type: Double,
                 required: true
             },
             start_date: {

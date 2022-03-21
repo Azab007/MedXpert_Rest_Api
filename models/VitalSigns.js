@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Double = require('@mongoosejs/double');
 const VitalSignsSchema = new mongoose.Schema({
 
     patient_id: {
@@ -11,7 +12,7 @@ const VitalSignsSchema = new mongoose.Schema({
         required: true
     },
     temp: {
-        type: mongoose.Types.Decimal128,
+        type: Double,
     },
     pulse: {
         type: Number,
@@ -24,7 +25,7 @@ const VitalSignsSchema = new mongoose.Schema({
         type: Number,
     },
     weight: {
-        type: mongoose.Types.Decimal128,
+        type: Double,
         max: 250
     },
 

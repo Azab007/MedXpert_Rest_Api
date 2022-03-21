@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Double = require('@mongoosejs/double');
+
 const _ = require('underscore');
 
 const DrugSchema = new mongoose.Schema({
@@ -26,12 +28,12 @@ const DrugSchema = new mongoose.Schema({
         required: true
     },
     price: {
-        type: mongoose.Types.Decimal128,
+        type: Double,
         required: true
     },
 
     overdose: {
-        type: mongoose.Types.Decimal128
+        type: Double
     },
     more: {
         type: String

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Double = require('@mongoosejs/double');
 
 const PatientSchema = new mongoose.Schema({
 
@@ -32,7 +33,7 @@ const PatientSchema = new mongoose.Schema({
     },
 
     weight: {
-        type: mongoose.Types.Decimal128,
+        type: Double,
         max: 250
     },
     type: [{
