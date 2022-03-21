@@ -110,7 +110,7 @@ const updateVitalSign = async(req, res) => {
     }
     const vitalSign = await VitalSign.findByIdAndUpdate(VitalSign_id, { $set: others }, { runValidators: true, new: true });
     checkVitalSigns([vitalSign]);
-    res.status(StatusCodes.OK).json({ "data": vitalSign, msg: "the VitalSign is updated succesfully", problems });
+    res.status(StatusCodes.OK).json({ "data": vitalSign, msg: "the VitalSign is updated succesfully" });
 
 };
 
