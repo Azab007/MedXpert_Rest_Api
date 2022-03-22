@@ -22,7 +22,7 @@ const VitalSignsSchema = new mongoose.Schema({
         type: Number,
     },
     pressure: {
-        type: Number,
+        type: String,
     },
     weight: {
         type: Double,
