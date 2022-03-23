@@ -58,7 +58,7 @@ const createVitalSign = async(req, res) => {
         res.status(StatusCodes.CREATED).json({ "data": newVitalSign, "msg": "vital sign created successfully" });
 
     } catch (error) {
-        throw new BadRequestError("failed to add vital sign ")
+        throw new BadRequestError(error.msg);
     }
 
 
