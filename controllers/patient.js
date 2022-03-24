@@ -42,6 +42,7 @@ const updatePatient = async(req, res) => {
         birthDate,
         gender,
         weight,
+        email,
         residency
     } = req.body
 
@@ -59,6 +60,7 @@ const updatePatient = async(req, res) => {
         birthDate,
         weight,
         gender,
+        email,
         residency
     }, { runValidators: true, new: true })
     if (!patient) {
