@@ -9,7 +9,7 @@ const { parseString } = require("xml2js");
 
 const getPatient = async(req, res) => {
     const id = req.user.userId;
-    const patient = await Patient.findById(id);
+    const patient = await Patient.findById(id).populate('followers').populate('followings').populate('clinicians.doctor', "_id username specialization");
     if (!patient) {
         throw new NotFoundError('patient not found')
     }
