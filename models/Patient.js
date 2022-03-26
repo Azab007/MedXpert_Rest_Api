@@ -47,9 +47,10 @@ const PatientSchema = new mongoose.Schema({
     followings: [{ type: mongoose.Types.ObjectId, ref: 'Patient' }],
 
     clinicians: [{
-        doctor_id: {
+        doctor: {
             type: mongoose.Types.ObjectId,
-            ref: 'Doctor'
+            ref: 'Doctor',
+            required: true
         },
         date: { type: Date, default: Date.now },
         _id: false

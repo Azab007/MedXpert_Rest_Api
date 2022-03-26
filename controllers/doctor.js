@@ -3,6 +3,7 @@ const Patient = require('../models/Patient')
 const Invitation = require('../models/invitations')
 const { NotFoundError, UnauthorizedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
+const { default: mongoose } = require('mongoose');
 
 const getDoc = async(req, res) => {
 
@@ -85,17 +86,18 @@ const useInvitation = async(req, res) => {
     if (!invitation) {
         throw new NotFoundError("this invitaions has expired, pls create a new one");
     }
-    const followingId = invitation.patient_id
+    const followingId = invitation.patient_id;
+    console.log(invitation.patient_id)
 
     await Doctor.findByIdAndUpdate(myId, {
         $addToSet: {
-            followings: followingId
+            followings: { patient_id: followingId }
         }
-    }, { runValidators: true, new: true })
+    }, { runValidators: true, new: true, })
 
     await Patient.findByIdAndUpdate(followingId, {
         $addToSet: {
-            clinicians: myId
+            clinicians: { doctor: myId }
         }
     }, { runValidators: true, new: true })
 
