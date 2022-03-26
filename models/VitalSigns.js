@@ -13,26 +13,50 @@ const VitalSignsSchema = new mongoose.Schema({
     },
     temp: {
         type: Double,
+        min: 24,
+        max: 37
     },
     pulse: {
         type: Number,
+        min: 27,
+        max: 220
     },
 
     respration: {
         type: Number,
+        min: 1,
+        max: 80
     },
-    pressure: {
-        type: String,
+    systolicPressure: {
+        type: Number,
+        min: 0,
+        max: 370
+    },
+    diastolicPressure: {
+        type: Number,
+        min: 0,
+        max: 370
     },
     weight: {
         type: Double,
         max: 250
     },
 
-    problems: [{
-        type: String,
-        enum: ["temp", "pulse", "respration", "pressure", "weight"]
-    }]
+    sugar: {
+        type: Number,
+        min: 7,
+        max: 2656
+    },
+    oxegen: {
+        type: Number,
+        min: 0,
+        max: 100
+    }
+
+    // problems: [{
+    //     type: String,
+    //     enum: ["temp", "pulse", "respration", "pressure", "weight"]
+    // }]
 
 
 

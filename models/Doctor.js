@@ -44,7 +44,8 @@ const DoctorSchema = new mongoose.Schema({
     followings: [{
         patient_id: {
             type: mongoose.Types.ObjectId,
-            ref: 'Patient'
+            ref: 'Patient',
+            required: true
         },
         date: { type: Date, default: Date.now },
         _id: false
@@ -54,7 +55,7 @@ const DoctorSchema = new mongoose.Schema({
 
 
 
-}, { timestamps: true })
+}, { timestamps: true, })
 
 
 module.exports = mongoose.model('Doctor', DoctorSchema);
