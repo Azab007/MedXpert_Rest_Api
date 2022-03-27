@@ -54,7 +54,7 @@ const createVitalSign = async(req, res) => {
         });
 
         await newVitalSign.save();
-        checkVitalSigns([newVitalSign]);
+        // checkVitalSigns([newVitalSign]);
         res.status(StatusCodes.CREATED).json({ "data": newVitalSign, "msg": "vital sign created successfully" });
 
     } catch (error) {
@@ -72,7 +72,7 @@ const getVitalSignPatient = async(req, res) => {
     if (!vitalSigns.length) {
         throw new NotFoundError("no vital signs found for this id")
     }
-    checkVitalSigns(vitalSigns);
+    //checkVitalSigns(vitalSigns);
     res.status(StatusCodes.OK).json({ "data": resData, "msg": "success" });
 
 }
@@ -124,7 +124,7 @@ const updateVitalSign = async(req, res) => {
         throw new UnauthorizedError("you can update only your vital signs")
     }
     const vitalSign = await VitalSign.findByIdAndUpdate(VitalSign_id, { $set: others }, { runValidators: true, new: true });
-    checkVitalSigns([vitalSign]);
+    //checkVitalSigns([vitalSign]);
     res.status(StatusCodes.OK).json({ "data": vitalSign, msg: "the VitalSign is updated succesfully" });
 
 };
