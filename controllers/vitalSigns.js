@@ -97,7 +97,7 @@ const getVitalSignDoctor = async(req, res) => {
 
 
     }
-    checkVitalSigns(vitalSigns);
+    // checkVitalSigns(vitalSigns);
     res.status(StatusCodes.OK).json({ "data": resData, "msg": "success" });
 
 }
