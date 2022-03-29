@@ -143,10 +143,13 @@ const useInvitation = async(req, res) => {
         throw new NotFoundError("this invitaions has expired, pls create a new one");
     }
     const followingId = invitation.patient_id
-        // let diff = new Date() - new Date(invitation.createdAt);
-        // if (diff > 1000 * 60 * 5) { // 5 minutes
-        //     throw new BadRequestError("out of date")
-        // }
+    if (followingId === myId) {
+        throw new BadRequestError("You cannot use your own invitation");
+    }
+    // let diff = new Date() - new Date(invitation.createdAt);
+    // if (diff > 1000 * 60 * 5) { // 5 minutes
+    //     throw new BadRequestError("out of date")
+    // }
     await Patient.findByIdAndUpdate(myId, {
         $addToSet: {
             followings: followingId
