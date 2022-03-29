@@ -21,6 +21,11 @@ const DoctorSchema = new mongoose.Schema({
         required: true,
         min: 8
     },
+
+    birthDate: {
+        type: Date,
+        required: true
+    },
     specialization: [{
         type: String,
         enum: [],
@@ -32,6 +37,7 @@ const DoctorSchema = new mongoose.Schema({
         enum: ['male', 'female', 'other'],
         required: true
     },
+
 
     residency: {
         type: String
