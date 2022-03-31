@@ -42,7 +42,7 @@ const addSpecialization = async(req, res) => {
     const { specialization } = req.body;
     console.log(req.body)
     const doc = await Doctor.findByIdAndUpdate(id, {
-        $addToSet: { specialization }
+        $addToSet: { specialization: { $each: specialization } }
     }, { runValidators: true, new: true })
 
     if (!doc) {
@@ -65,12 +65,11 @@ const deleteSpecialization = async(req, res) => {
 
 const updateDoc = async(req, res) => {
     const id = req.user.userId;
-    const { username, residency, bio, specialization } = req.body
+    const { username, residency, bio } = req.body
     const doc = await Doctor.findByIdAndUpdate(id, {
         username,
         residency,
-        bio,
-        specialization
+        bio
     }, { runValidators: true, new: true })
     if (!doc) {
         throw new NotFoundError('doctor not found')
