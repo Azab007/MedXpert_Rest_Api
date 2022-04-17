@@ -8,11 +8,12 @@ const { default: mongoose } = require('mongoose');
 const getDoc = async(req, res) => {
 
     const doc_id = req.user.userId;
-    const doc = await Doctor.findById(doc_id).populate('followings', "_id username email gender");
+    const doc = await Doctor.findById(doc_id).populate('followings.patient_id', "_id username email gender");
     if (!doc) {
         throw new NotFoundError('doctor not found')
     }
     delete doc._doc.password
+    console.log(doc);
     res.status(StatusCodes.OK).json({ "msg": "success", "data": doc })
 
 }
