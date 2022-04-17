@@ -10,7 +10,7 @@ const Doctor = require('../models/Doctor');
 
 const getPatient = async(req, res) => {
     const id = req.user.userId;
-    const patient = await Patient.findById(id).populate('followers', "_id username email gender").populate('followings', "_id username email gender").populate('clinicians.doctor', "_id username specialization");
+    const patient = await Patient.findById(id).populate('followers', "_id username email gender").populate('followings', "_id username email gender").populate('clinicians.doctor', "_id username email gender specialization");
     if (!patient) {
         throw new NotFoundError('patient not found')
     }
