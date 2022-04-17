@@ -4,6 +4,7 @@ const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../err
 const { StatusCodes } = require('http-status-codes');
 const { default: axios } = require('axios');
 const { parseString } = require("xml2js");
+const Doctor = require('../models/Doctor');
 
 
 
@@ -166,6 +167,62 @@ const useInvitation = async(req, res) => {
 
 }
 
+
+const deleteFollowerFromPatient = async(req, res) => {
+    const patientId = req.query.id
+    const myId = req.user.userId
+    await Patient.findByIdAndUpdate(myId, {
+        $pull: {
+            followers: patientId
+        }
+    }, { runValidators: true, new: true })
+
+    await Patient.findByIdAndUpdate(patientId, {
+        $pull: {
+            followings: myId
+
+        }
+    }, { runValidators: true, new: true })
+
+}
+
+
+const deleteFollowingFromPatient = async(req, res) => {
+    const patientId = req.query.id
+    const myId = req.user.userId
+    await Patient.findByIdAndUpdate(myId, {
+        $pull: {
+            followings: patientId
+        }
+    }, { runValidators: true, new: true })
+
+    await Patient.findByIdAndUpdate(patientId, {
+        $pull: {
+            followers: myId
+
+        }
+    }, { runValidators: true, new: true })
+
+}
+
+const deleteDoctorFromPatient = async(req, res) => {
+    const doctorId = req.query.id
+    const myId = req.user.userId
+    await Patient.findByIdAndUpdate(myId, {
+        $pull: {
+            clinicians: doctorId
+        }
+    }, { runValidators: true, new: true })
+
+    await Doctor.findByIdAndUpdate(doctorId, {
+        $pull: {
+            followings: myId
+
+        }
+    }, { runValidators: true, new: true })
+}
+
+
 const getArticles = async(req, res) => {
     const id = req.user.userId;
     const patient = await Patient.findById(id);
@@ -200,5 +257,8 @@ module.exports = {
     deletePatient,
     createInvitation,
     useInvitation,
-    getArticles
+    getArticles,
+    deleteDoctorFromPatient,
+    deleteFollowerFromPatient,
+    deleteFollowingFromPatient
 }

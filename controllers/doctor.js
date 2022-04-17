@@ -8,7 +8,7 @@ const { default: mongoose } = require('mongoose');
 const getDoc = async(req, res) => {
 
     const doc_id = req.user.userId;
-    const doc = await Doctor.findById(doc_id);
+    const doc = await Doctor.findById(doc_id).populate('followings', "_id username email gender");
     if (!doc) {
         throw new NotFoundError('doctor not found')
     }
@@ -105,6 +105,24 @@ const useInvitation = async(req, res) => {
 
 }
 
+const deleteFollowingFromDoctor = async(req, res) => {
+    const patientId = req.query.id;
+    const doctorId = req.user.userId;
+
+    await Doctor.findByIdAndUpdate(doctorId, {
+        $pull: {
+            followings: { patient_id: patientId }
+        }
+    }, { runValidators: true, new: true, })
+
+    await Patient.findByIdAndUpdate(patientId, {
+        $addToSet: {
+            clinicians: { doctor: doctorId }
+        }
+    }, { runValidators: true, new: true })
+
+}
+
 
 
 
@@ -115,5 +133,6 @@ module.exports = {
     addSpecialization,
     deleteSpecialization,
     updateDoc,
-    useInvitation
+    useInvitation,
+    deleteFollowingFromDoctor
 };
