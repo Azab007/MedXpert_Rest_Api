@@ -183,6 +183,7 @@ const deleteFollowerFromPatient = async(req, res) => {
 
         }
     }, { runValidators: true, new: true })
+    return res.status(StatusCodes.OK).json({ "msg": "success" })
 
 }
 
@@ -202,6 +203,7 @@ const deleteFollowingFromPatient = async(req, res) => {
 
         }
     }, { runValidators: true, new: true })
+    return res.status(StatusCodes.OK).json({ "msg": "success" })
 
 }
 
@@ -220,6 +222,8 @@ const deleteDoctorFromPatient = async(req, res) => {
 
         }
     }, { runValidators: true, new: true })
+    return res.status(StatusCodes.OK).json({ "msg": "success" })
+
 }
 
 

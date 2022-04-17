@@ -31,7 +31,6 @@ router.route("/deletePatient").delete(authenticateUser, isPatient, deletePatient
 router.route("/createInvitation").get(authenticateUser, isPatient, createInvitation)
 router.route("/useInvitation").post(authenticateUser, isPatient, useInvitation)
 router.route("/articles").get(authenticateUser, isPatient, getArticles)
-router.route("/deleteDoctorFromPatient").get(authenticateUser, isPatient, deleteDoctorFromPatient)
 router.route("/deleteDoctorFromPatient").patch(authenticateUser, isPatient, deleteDoctorFromPatient)
 router.route("/deleteFollowerFromPatient").patch(authenticateUser, isPatient, deleteFollowerFromPatient)
 router.route("/deleteFollowingFromPatient").patch(authenticateUser, isPatient, deleteFollowingFromPatient)

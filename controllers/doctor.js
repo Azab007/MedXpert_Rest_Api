@@ -106,7 +106,7 @@ const useInvitation = async(req, res) => {
 
 }
 
-const deleteFollowingFromDoctor = async(req, res) => {
+const deletePatientFromDoctor = async(req, res) => {
     const patientId = req.query.id;
     const doctorId = req.user.userId;
 
@@ -117,11 +117,11 @@ const deleteFollowingFromDoctor = async(req, res) => {
     }, { runValidators: true, new: true, })
 
     await Patient.findByIdAndUpdate(patientId, {
-        $addToSet: {
+        $pull: {
             clinicians: { doctor: doctorId }
         }
     }, { runValidators: true, new: true })
-
+    return res.status(StatusCodes.OK).json({ "msg": "success" })
 }
 
 
@@ -135,5 +135,5 @@ module.exports = {
     deleteSpecialization,
     updateDoc,
     useInvitation,
-    deleteFollowingFromDoctor
+    deletePatientFromDoctor
 };
