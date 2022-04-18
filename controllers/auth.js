@@ -7,6 +7,7 @@ const Doctor = require('../models/Doctor.js');
 const Pharma_Inc = require('../models/Pharma_Inc.js');
 const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
+const nodemailer = require("nodemailer");
 
 const register = async(req, res, next) => {
     const errors = validationResult(req);
@@ -107,10 +108,55 @@ const logout = async(req, res) => {
     res.status(StatusCodes.OK).json({ msg: 'user logged out!' });
 };
 
+const mailVerification = async(req, res) => {
+    const code = req.query.code
+        // check in data
+    console.log(code)
+        // IF GOOD ACTIVATE ACCOUNT
+
+    // IF NOT SEND ERROR
+    try {
+        await sendVerification()
+
+    } catch (error) {
+        console.log(error)
+    }
+    res.status(StatusCodes.OK).json({ "msg": "mail activated" })
+
+}
+
+
+async function sendVerification() {
+    // let testAccount = await nodemailer.createTestAccount();
+
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.projMail,
+            pass: process.env.mailPassword,
+        },
+    });
+
+
+    let mailOptions = {
+        from: `"Fred Foo 👻" <${process.env.projMail}>`,
+        to: "abdo_taha_1098@yahoo.com, mazab322@gmail.com ",
+        subject: `The subject goes here`,
+        html: `The body of the email goes here in HTML`,
+    };
+    transporter.sendMail(mailOptions, function(err, info) {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(info);
+        }
+    });
+}
 
 
 module.exports = {
     register,
     login,
-    logout
+    logout,
+    mailVerification
 }
