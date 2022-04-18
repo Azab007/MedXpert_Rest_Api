@@ -212,13 +212,13 @@ const deleteDoctorFromPatient = async(req, res) => {
     const myId = req.user.userId
     await Patient.findByIdAndUpdate(myId, {
         $pull: {
-            clinicians: doctorId
+            clinicians: { doctor: doctorId }
         }
     }, { runValidators: true, new: true })
 
     await Doctor.findByIdAndUpdate(doctorId, {
         $pull: {
-            followings: myId
+            followings: { patient_id: myId }
 
         }
     }, { runValidators: true, new: true })
