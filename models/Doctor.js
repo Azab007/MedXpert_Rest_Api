@@ -37,6 +37,11 @@ const DoctorSchema = new mongoose.Schema({
         enum: ['male', 'female', 'other'],
         required: true
     },
+    verified: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
 
 
     residency: {

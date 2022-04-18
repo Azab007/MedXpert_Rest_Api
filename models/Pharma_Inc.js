@@ -20,7 +20,11 @@ const Pharma_IncSchema = new mongoose.Schema({
         required: true,
         min: 8
     },
-
+    verified: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
     Location: {
         type: String
     },
