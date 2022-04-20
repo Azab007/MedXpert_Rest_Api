@@ -19,4 +19,4 @@ const VerificationToken = new mongoose.Schema({
 
 VerificationToken.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
 
-module.exports = mongoose.model('Invitations', VerificationToken);
+module.exports = mongoose.model('VerificationToken', VerificationToken);

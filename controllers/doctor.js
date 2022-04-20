@@ -13,7 +13,6 @@ const getDoc = async(req, res) => {
         throw new NotFoundError('doctor not found')
     }
     delete doc._doc.password
-    console.log(doc);
     res.status(StatusCodes.OK).json({ "msg": "success", "data": doc })
 
 }
