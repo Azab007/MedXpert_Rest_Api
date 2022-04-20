@@ -65,11 +65,14 @@ const deleteSpecialization = async(req, res) => {
 
 const updateDoc = async(req, res) => {
     const id = req.user.userId;
-    const { username, residency, bio } = req.body
+    const { username, residency, bio, gender, email, birthDate } = req.body
     const doc = await Doctor.findByIdAndUpdate(id, {
         username,
         residency,
-        bio
+        bio,
+        gender,
+        email,
+        birthDate
     }, { runValidators: true, new: true })
     if (!doc) {
         throw new NotFoundError('doctor not found')
