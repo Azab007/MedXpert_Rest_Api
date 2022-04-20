@@ -8,6 +8,8 @@ const Pharma_Inc = require('../models/Pharma_Inc.js');
 const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 const nodemailer = require("nodemailer");
+const Invitations = require('../models/VerificationToken.js')
+const Crypto = require('crypto')
 
 const register = async(req, res, next) => {
     const errors = validationResult(req);
@@ -22,6 +24,8 @@ const register = async(req, res, next) => {
     }
     const hasedPassword = await bcrypt.hash(req.body.password, 12);
 
+    let id;
+
     if (role === 'patient') {
         const newPatient = new Patient({
             ...req.body,
@@ -30,7 +34,8 @@ const register = async(req, res, next) => {
         });
 
         await newPatient.save();
-        res.status(StatusCodes.CREATED).json({ "msg": "success" });
+        id = newPatient._id
+
     } else if (role === 'doctor') {
         const newDoctor = new Doctor({
             ...req.body,
@@ -39,7 +44,8 @@ const register = async(req, res, next) => {
         });
 
         await newDoctor.save();
-        res.status(StatusCodes.CREATED).json({ "msg": "success" });
+        id = newDoctor._id
+
     } else if (role === 'pharma_inc') {
         const newPharma = new Pharma_Inc({
             ...req.body,
@@ -48,10 +54,26 @@ const register = async(req, res, next) => {
         });
 
         await newPharma.save();
-        res.status(StatusCodes.CREATED).json({ "msg": "success" });
     } else {
         throw new BadRequestError("unknown role")
     }
+
+
+    const Token = Crypto
+        .randomBytes(24)
+        .toString('base64')
+        .slice(0, 24) //generate random token
+        // console.log(Token)
+    const tokenData = new Invitations({
+        Token,
+        id,
+        isPatient: role === 'patient'
+    })
+    await tokenData.save()
+
+    sendVerification(req.body.email, Token)
+    res.status(StatusCodes.CREATED).json({ "msg": "success" });
+
 
 }
 
@@ -111,22 +133,30 @@ const logout = async(req, res) => {
 const mailVerification = async(req, res) => {
     const code = req.query.code
         // check in data
-    console.log(code)
-        // IF GOOD ACTIVATE ACCOUNT
+    let tokenData = await Invitations.findOneAndDelete({ token: code })
 
-    // IF NOT SEND ERROR
-    try {
-        await sendVerification()
-
-    } catch (error) {
-        console.log(error)
+    if (!tokenData) {
+        throw new NotFoundError("expired token")
     }
+    if (tokenData.isPatient) {
+        const patient = await Patient.findByIdAndUpdate(tokenData.id, {
+                verified: true
+            }, { runValidators: true, new: true })
+            // console.log(patient)
+    } else {
+        const doc = await Doctor.findByIdAndUpdate(tokenData.id, {
+                verified: true
+            }, { runValidators: true, new: true })
+            // console.log(doc)
+    }
+
+
     res.status(StatusCodes.OK).json({ "msg": "mail activated" })
 
 }
 
 
-async function sendVerification() {
+async function sendVerification(email, code) {
     // let testAccount = await nodemailer.createTestAccount();
 
     let transporter = nodemailer.createTransport({
@@ -139,10 +169,10 @@ async function sendVerification() {
 
 
     let mailOptions = {
-        from: `"Fred Foo 👻" <${process.env.projMail}>`,
-        to: "abdo_taha_1098@yahoo.com, mazab322@gmail.com ",
-        subject: `The subject goes here`,
-        html: `The body of the email goes here in HTML`,
+        from: `"no reply" <${process.env.projMail}>`,
+        to: email,
+        subject: `mail activation`,
+        html: `to activate your account please click here <a href="http://localhost:8000/api/auth/mailVerification?code=${code}">click here</a> `,
     };
     transporter.sendMail(mailOptions, function(err, info) {
         if (err) {
@@ -152,6 +182,8 @@ async function sendVerification() {
         }
     });
 }
+
+
 
 
 module.exports = {
