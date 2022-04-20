@@ -12,6 +12,10 @@ const MedicationSchema = new mongoose.Schema({
                 ref: 'Drug',
                 required: true,
             },
+            drug_name: {
+                type: String,
+                required: true,
+            },
 
             dose: {
                 type: Double,
