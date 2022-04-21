@@ -156,7 +156,26 @@ const deleteFromList = async(req, res) => {
     res.status(StatusCodes.OK).json({ "data": newData, msg: "the data is deleted succesfully" });
 }
 
+const autoComplete = (req, res) => {
+    let key = req.query.key;
+    const output = [];
+    let query = {
+        "drugName": { "$regex": key, "$options": "i" }
+    };
+    Drug.find(query).limit(6).then(drugs => {
+        if (drugs && drugs.length && drugs.length > 0) {
+            drugs.forEach(drug => {
+                output.push(drug.drugName)
+            })
+        }
+        console.log(output);
+        res.status(StatusCodes.OK).json({ "data": output })
 
+    }).catch(err => {
+        throw new BadRequestError("something went wrong");
+    })
+
+};
 
 module.exports = {
     createDrug,
@@ -166,5 +185,6 @@ module.exports = {
     deleteDrug,
     addToList,
     deleteFromList,
-    getDrugNames
+    getDrugNames,
+    autoComplete
 };

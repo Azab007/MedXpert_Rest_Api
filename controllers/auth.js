@@ -54,6 +54,7 @@ const register = async(req, res, next) => {
         });
 
         await newPharma.save();
+        id = newDoctor._id
     } else {
         throw new BadRequestError("unknown role")
     }
