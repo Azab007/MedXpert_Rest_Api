@@ -9,7 +9,8 @@ const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../err
 const { StatusCodes } = require('http-status-codes');
 const nodemailer = require("nodemailer");
 const Invitations = require('../models/VerificationToken.js')
-const Crypto = require('crypto')
+const Crypto = require('crypto');
+const sendEmail = require("./utils/sendMail.js");
 
 const register = async(req, res, next) => {
     const errors = validationResult(req);
@@ -159,29 +160,8 @@ const mailVerification = async(req, res) => {
 
 async function sendVerification(email, code) {
     // let testAccount = await nodemailer.createTestAccount();
-
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.projMail,
-            pass: process.env.mailPassword,
-        },
-    });
-
-
-    let mailOptions = {
-        from: `"no reply" <${process.env.projMail}>`,
-        to: email,
-        subject: `mail activation`,
-        html: `to activate your account please click here <a href="http://localhost:8000/api/auth/mailVerification?code=${code}">click here</a> `,
-    };
-    transporter.sendMail(mailOptions, function(err, info) {
-        if (err) {
-            res.json(err);
-        } else {
-            res.json(info);
-        }
-    });
+    let text = `to activate your account please click here <a href="http://localhost:8000/api/auth/mailVerification?code=${code}">click here</a> `
+    sendEmail(email, `mail activation`, text);
 }
 
 
