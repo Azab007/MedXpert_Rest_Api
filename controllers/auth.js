@@ -163,7 +163,7 @@ const mailVerification = async(req, res) => {
 
 async function sendVerification(email, code) {
     // let testAccount = await nodemailer.createTestAccount();
-    let text = `to activate your account please click here <a href="http://localhost:8000/api/auth/mailVerification?code=${code}">click here</a> `
+    let text = `to activate your account please click <a href="http://localhost:8000/api/auth/mailVerification?code=${code}"> here</a> `
     sendEmail(email, `mail activation`, text);
 }
 
@@ -192,7 +192,7 @@ const passwordReset = async(req, res) => {
         }).save();
     }
     const link = `http://localhost:8000/api/auth/passwordReset/${token.Token}`;
-    const text = `to Reset your Password please click here <a href=${link}">click here</a>`
+    const text = `to Reset your Password please click <a href=${link}"> here</a>`
     await sendEmail(user.email, "Password reset", text);
     res.status(StatusCodes.OK).json({ msg: "password reset link sent to your email account" });
 
