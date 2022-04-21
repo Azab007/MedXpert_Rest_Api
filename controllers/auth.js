@@ -11,6 +11,9 @@ const nodemailer = require("nodemailer");
 const Invitations = require('../models/VerificationToken.js')
 const Crypto = require('crypto');
 const sendEmail = require("./utils/sendMail.js");
+const PasswordResetToken = require("../models/PasswordResetToken.js");
+var generator = require('generate-password');
+
 
 const register = async(req, res, next) => {
     const errors = validationResult(req);
@@ -164,12 +167,78 @@ async function sendVerification(email, code) {
     sendEmail(email, `mail activation`, text);
 }
 
+const passwordReset = async(req, res) => {
+    const { email, role } = req.body
+    let user;
+    if (role == 'patient') {
+        user = await Patient.findOne({ email: email });
+    } else if (role == 'doctor') {
+        user = await Doctor.findOne({ email: email });
+    } else if (role == 'pharma_inc') {
+        user = await Pharma_Inc.findOne({ email: email });
+    } else {
+        throw new BadRequestError("role does not exist");
+    }
 
+    if (!user)
+        throw new BadRequestError('email does not exists');
+
+    let token = await PasswordResetToken.findOne({ id: user._id });
+    if (!token) {
+        token = await new PasswordResetToken({
+            id: user._id,
+            Token: Crypto.randomBytes(32).toString("hex"),
+            role: role
+        }).save();
+    }
+
+    const link = `http://localhost:8000/api/auth/passwordReset/${token.Token}`;
+    await sendEmail(user.email, "Password reset", link);
+    res.status(StatusCodes.OK).json({ msg: "password reset link sent to your email account" });
+
+};
+
+const ConfirmPasswordReset = async(req, res) => {
+    const tk = req.params.token;
+
+    const token = await PasswordResetToken.findOne({
+        token: tk,
+    });
+    let user;
+    if (!token) throw new BadRequestError("Link expired or does not exists");
+    if (token.role === 'patient') {
+        user = await Patient.findOne({ _id: token.id });
+    } else if (token.role === 'doctor') {
+        user = await Doctor.findOne({ _id: token.id })
+    } else if (role === 'pharma_inc') {
+        user = await Pharma_Inc.findOne({ _id: token.id })
+    } else {
+        throw new BadRequestError("role does not exists")
+    }
+    var password = generator.generate({
+        length: 10,
+        numbers: true,
+        uppercase: true,
+        lowercase: true,
+        symbols: true
+    });
+    const hasedPassword = await bcrypt.hash(password, 12);
+    user.password = hasedPassword;
+    await user.save();
+    await token.delete();
+
+    let text = `<h2> Your new Password is "${password}"`
+    await sendEmail(user.email, 'Password Reset', text);
+
+    res.status(StatusCodes.OK).send(`check Your inbox for your new Password`);
+};
 
 
 module.exports = {
     register,
     login,
     logout,
-    mailVerification
+    mailVerification,
+    passwordReset,
+    ConfirmPasswordReset
 }
