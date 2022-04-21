@@ -191,9 +191,9 @@ const passwordReset = async(req, res) => {
             role: role
         }).save();
     }
-
     const link = `http://localhost:8000/api/auth/passwordReset/${token.Token}`;
-    await sendEmail(user.email, "Password reset", link);
+    const text = `to Reset your Password please click here <a href=${link}">click here</a>`
+    await sendEmail(user.email, "Password reset", text);
     res.status(StatusCodes.OK).json({ msg: "password reset link sent to your email account" });
 
 };
