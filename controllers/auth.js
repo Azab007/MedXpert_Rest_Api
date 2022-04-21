@@ -228,7 +228,7 @@ const ConfirmPasswordReset = async(req, res) => {
     await token.delete();
 
     let text = `<h2> Your new Password is "${password}"`
-    await sendEmail(user.email, 'Password Reset', text);
+    await sendEmail(user.email, 'New Password', text);
 
     res.status(StatusCodes.OK).send(`check Your inbox for your new Password`);
 };
