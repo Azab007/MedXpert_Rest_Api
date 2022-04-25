@@ -183,6 +183,10 @@ const passwordReset = async(req, res) => {
     if (!user)
         throw new BadRequestError('email does not exists');
 
+    // if (!user.verified) {
+    //     throw new BadRequestError('Please verify your email first');
+    // }
+
     let token = await PasswordResetToken.findOne({ id: user._id });
     if (!token) {
         token = await new PasswordResetToken({

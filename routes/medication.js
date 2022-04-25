@@ -7,7 +7,8 @@ const {
     deleteMedication,
     addMedicationDrug,
     deleteMedicationDrug,
-    getFollowingMedication
+    getFollowingMedication,
+    getMedicationsByPatientId
 } = require('../controllers/Medication.js');
 const { isDoctor, isPatient, authenticateUser, isPatientorDoctor } = require('../middleware/authentication.js')
 router.route('/createMedication').post(authenticateUser, isDoctor, createMedication);
@@ -18,6 +19,8 @@ router.route('/addMedicationDrug').patch(authenticateUser, isDoctor, addMedicati
 router.route('/deleteMedicationDrug').patch(authenticateUser, isDoctor, deleteMedicationDrug);
 router.route('/deleteMedication').delete(authenticateUser, isDoctor, deleteMedication);
 router.route('/getFollowingMedication').get(authenticateUser, isPatient, getFollowingMedication);
+router.route('/getMedicationsByPatientId').get(authenticateUser, isPatientorDoctor, getMedicationsByPatientId);
+
 
 
 

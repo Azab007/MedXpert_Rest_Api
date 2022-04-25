@@ -215,6 +215,29 @@ const getFollowingMedication = async(req, res) => {
 }
 
 
+const getMedicationsByPatientId = async(req, res) => {
+    let id;
+    const role = req.user.role;
+    if (role == "patient") {
+        id = req.user.userId
+    } else {
+        id = req.query.id
+        const me = await Doctor.findById(req.user.userId);
+        const followingIds = me.followings.map(id => id.toString())
+        if (!followingIds.includes(id)) {
+            throw UnauthenticatedError("you can not access this data")
+        }
+    }
+    const Medications = await Medication.find({ "patient_id": id, "currentlyTaken": true });
+    // const interactions = await checkInteractions(medication.drugs)
+    // const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
+    res.status(StatusCodes.OK).json({
+        "data": Medications,
+        msg: "success",
+    });
+}
+
+
 
 module.exports = {
     createMedication,
@@ -224,5 +247,6 @@ module.exports = {
     deleteMedication,
     addMedicationDrug,
     deleteMedicationDrug,
-    getFollowingMedication
+    getFollowingMedication,
+    getMedicationsByPatientId
 };
