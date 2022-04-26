@@ -7,7 +7,8 @@ const {
     deleteSpecialization,
     updateDoc,
     useInvitation,
-    deletePatientFromDoctor
+    deletePatientFromDoctor,
+    getArticles
 } = require('../controllers/doctor.js')
 
 const {

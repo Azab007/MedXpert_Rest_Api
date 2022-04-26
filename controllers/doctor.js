@@ -4,6 +4,7 @@ const Invitation = require('../models/invitations')
 const { NotFoundError, UnauthorizedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 const { default: mongoose } = require('mongoose');
+const { default: axios } = require('axios');
 
 const getDoc = async(req, res) => {
 
@@ -129,6 +130,7 @@ const deletePatientFromDoctor = async(req, res) => {
 
 
 
+
 module.exports = {
     getDoc,
     getAllDoc,
@@ -137,5 +139,5 @@ module.exports = {
     deleteSpecialization,
     updateDoc,
     useInvitation,
-    deletePatientFromDoctor
+    deletePatientFromDoctor,
 };
