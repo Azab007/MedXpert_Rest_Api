@@ -165,7 +165,7 @@ const autoComplete = (req, res) => {
     Drug.find(query).limit(6).then(drugs => {
         if (drugs && drugs.length && drugs.length > 0) {
             drugs.forEach(drug => {
-                output.push(drug.drugName)
+                output.push({ id: drug._id, name: drug.drugName })
             })
         }
         console.log(output);
