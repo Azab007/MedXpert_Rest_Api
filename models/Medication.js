@@ -29,6 +29,10 @@ const MedicationSchema = new mongoose.Schema({
                 type: Date,
                 required: true,
             },
+            currentlyTaken: {
+                type: Boolean,
+                default: true
+            },
             _id: false,
         },
 
@@ -43,14 +47,6 @@ const MedicationSchema = new mongoose.Schema({
         ref: 'Doctor',
         required: true
     },
-
-    currentlyTaken: {
-        type: Boolean,
-        default: true
-    },
-
-
-
 
 }, { timestamps: true })
 
