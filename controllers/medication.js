@@ -118,9 +118,9 @@ const updateMedication = async(req, res) => {
         throw new NotFoundError("no Medication matches this id")
     }
 
-    if (req.user.userId !== MedFromDB.doctor_id.toString()) {
-        throw new UnauthorizedError("you can update only your Medications")
-    }
+    // if (req.user.userId !== MedFromDB.doctor_id.toString()) {
+    //     throw new UnauthorizedError("you can update only your Medications")
+    // }
     const medication = await Medication.findByIdAndUpdate(Medication_id, { $set: others }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
 
