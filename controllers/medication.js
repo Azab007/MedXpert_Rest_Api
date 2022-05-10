@@ -161,6 +161,10 @@ const addMedicationDrug = async(req, res) => {
     if (req.user.userId !== MedFromDB.doctor_id.toString()) {
         throw new UnauthorizedError("you can delete only your Medications")
     }
+
+    if (req.body.start_date >= req.body.end_date) {
+        throw new BadRequestError("start date must be smaller than end date")
+    }
     const medication = await Medication.findByIdAndUpdate(medication_id, { $addToSet: { drugs: req.body } }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
     const restrictions = await checkRestrictions(medication.drugs, medication.patient_id)
