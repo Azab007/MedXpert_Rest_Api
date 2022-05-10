@@ -14,7 +14,7 @@ const { isDoctor, isPatient, authenticateUser, isPatientorDoctor } = require('..
 router.route('/createMedication').post(authenticateUser, isDoctor, createMedication);
 router.route('/getMedication').get(authenticateUser, isPatientorDoctor, getMedication);
 router.route('/getAllMedications').get(authenticateUser, getAllMedications);
-router.route('/updateMedication').patch(authenticateUser, isDoctor, updateMedication);
+router.route('/updateMedication').patch(authenticateUser, isPatientorDoctor, updateMedication);
 router.route('/addMedicationDrug').patch(authenticateUser, isDoctor, addMedicationDrug);
 router.route('/deleteMedicationDrug').patch(authenticateUser, isDoctor, deleteMedicationDrug);
 router.route('/deleteMedication').delete(authenticateUser, isDoctor, deleteMedication);
