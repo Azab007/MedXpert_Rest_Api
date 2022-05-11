@@ -47,6 +47,10 @@ const MedicationSchema = new mongoose.Schema({
         ref: 'Doctor',
         required: true
     },
+    name: {
+        type: String,
+        required: true
+    }
 
 }, { timestamps: true })
 
