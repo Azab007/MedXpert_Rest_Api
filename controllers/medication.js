@@ -226,12 +226,12 @@ const getMedicationsByPatientId = async(req, res) => {
         id = req.user.userId
     } else {
         id = req.query.id
-        const me = await Doctor.findById(req.user.userId);
-        const followingIds = me.followings.map(obj => obj.patient_id.toString())
-        console.log(followingIds);
-        if (!followingIds.includes(id)) {
-            throw new UnauthorizedError("you can not access this data")
-        }
+            // const me = await Doctor.findById(req.user.userId);
+            // const followingIds = me.followings.map(obj => obj.patient_id.toString())
+            // console.log(followingIds);
+            // if (!followingIds.includes(id)) {
+            //     throw new UnauthorizedError("you can not access this data")
+            // }
     }
     const Medications = await Medication.find({ "patient_id": id, "currentlyTaken": true });
     // const interactions = await checkInteractions(medication.drugs)
