@@ -3,7 +3,7 @@ const Drug = require('../models/Drug')
 const Patient = require('../models/Patient')
 const { StatusCodes } = require('http-status-codes');
 const { default: mongoose } = require('mongoose');
-const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../errors');
+const { NotFoundError, BadRequestError, UnauthenticatedError, UnauthorizedError } = require('../errors');
 const { object } = require('underscore');
 const Doctor = require('../models/Doctor.js');
 
