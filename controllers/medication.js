@@ -230,7 +230,7 @@ const getMedicationsByPatientId = async(req, res) => {
         const followingIds = me.followings.map(obj => obj.patient_id.toString())
         console.log(followingIds);
         if (!followingIds.includes(id)) {
-            throw new UnauthenticatedError("you can not access this data")
+            throw new UnauthorizedError("you can not access this data")
         }
     }
     const Medications = await Medication.find({ "patient_id": id, "currentlyTaken": true });
