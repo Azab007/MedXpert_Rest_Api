@@ -233,11 +233,12 @@ const getMedicationsByPatientId = async(req, res) => {
             //     throw new UnauthorizedError("you can not access this data")
             // }
     }
-    const Medications = await Medication.find({ "patient_id": id, "currentlyTaken": true });
-    // const interactions = await checkInteractions(medication.drugs)
-    // const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
+    const Medications = await Medication.find({ "patient_id": id });
+    const meds = Medications.filter(obj => obj.drugs.length > 0)
+        // const interactions = await checkInteractions(medication.drugs)
+        // const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
-        "data": Medications,
+        "data": meds,
         msg: "success",
     });
 }
