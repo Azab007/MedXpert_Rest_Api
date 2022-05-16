@@ -45,7 +45,6 @@ const MedicationSchema = new mongoose.Schema({
     doctor_id: {
         type: mongoose.Types.ObjectId,
         ref: 'Doctor',
-        required: true
     },
     name: {
         type: String,

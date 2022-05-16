@@ -51,8 +51,8 @@ const checkRestrictions = async(drugList, patientID) => {
 
 
 const createMedication = async(req, res) => {
-    const docId = req.user.userId
-    const patientId = req.query.id
+    const docId = req.user.role === 'doctor' ? req.user.userId : null
+    const patientId = req.user.role === 'doctor' ? req.query.id : req.user.userId
     const { patient_id, ...others } = req.body
 
 
@@ -143,7 +143,10 @@ const deleteMedication = async(req, res) => {
         throw new NotFoundError("no Medication matches this id")
     }
 
-    if (req.user.userId !== MedFromDB.doctor_id.toString()) {
+    if (req.user.role === 'doctor' && req.user.userId !== MedFromDB.doctor_id.toString()) {
+        throw new UnauthorizedError("you can delete only your Medications")
+    }
+    if (req.user.role === 'patient' && req.user.userId !== MedFromDB.patient_id.toString()) {
         throw new UnauthorizedError("you can delete only your Medications")
     }
     await MedFromDB.deleteOne();
@@ -158,7 +161,11 @@ const addMedicationDrug = async(req, res) => {
         throw new NotFoundError("no Medication matches this id")
     }
 
-    if (req.user.userId !== MedFromDB.doctor_id.toString()) {
+    if (req.user.role === 'doctor' && req.user.userId !== MedFromDB.doctor_id.toString()) {
+        throw new UnauthorizedError("you can delete only your Medications")
+    }
+
+    if (req.user.role === 'patient' && req.user.userId !== MedFromDB.patient_id.toString()) {
         throw new UnauthorizedError("you can delete only your Medications")
     }
 
@@ -184,7 +191,11 @@ const deleteMedicationDrug = async(req, res) => {
         throw new NotFoundError("no Medication matches this id")
     }
 
-    if (req.user.userId !== MedFromDB.doctor_id.toString()) {
+    if (req.user.role === 'doctor' && req.user.userId !== MedFromDB.doctor_id.toString()) {
+        throw new UnauthorizedError("you can delete only your Medications")
+    }
+
+    if (req.user.role === 'patient' && req.user.userId !== MedFromDB.patient_id.toString()) {
         throw new UnauthorizedError("you can delete only your Medications")
     }
     const medication = await Medication.findByIdAndUpdate(medication_id, { $pull: { drugs: { drug_id: mongoose.Types.ObjectId(req.body.drug_id) } } }, { runValidators: true, new: true });

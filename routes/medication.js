@@ -11,7 +11,7 @@ const {
     getMedicationsByPatientId
 } = require('../controllers/Medication.js');
 const { isDoctor, isPatient, authenticateUser, isPatientorDoctor } = require('../middleware/authentication.js')
-router.route('/createMedication').post(authenticateUser, isDoctor, createMedication);
+router.route('/createMedication').post(authenticateUser, isPatientorDoctor, createMedication);
 router.route('/getMedication').get(authenticateUser, isPatientorDoctor, getMedication);
 router.route('/getAllMedications').get(authenticateUser, getAllMedications);
 router.route('/updateMedication').patch(authenticateUser, isPatientorDoctor, updateMedication);
