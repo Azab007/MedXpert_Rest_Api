@@ -1,7 +1,22 @@
 const Drug = require('../models/Drug.js')
 const { default: mongoose } = require('mongoose');
+const df = require('difflib');
+const vision = require('@google-cloud/vision');
+
 const { NotFoundError, BadRequestError, UnauthorizedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
+
+
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const csvWriter = createCsvWriter({
+    path: 'dataset.csv',
+    header: [
+        { id: 'imgPath', title: 'ImgPath' },
+        { id: 'label', title: 'Label' }
+    ]
+});
+
+
 const createDrug = async(req, res) => {
     const pharma_id = req.user.userId;
     const { inc_id, ...others } = req.body;
@@ -177,6 +192,58 @@ const autoComplete = (req, res) => {
 
 };
 
+
+const scan = async(req, res) => {
+    const file = req.file;
+    const client = new vision.ImageAnnotatorClient();
+
+    const fileName = file.path;
+
+    // Read a local image as a text document
+    const [result] = await client.documentTextDetection(fileName);
+    const fullTextAnnotation = result.fullTextAnnotation;
+    console.log(`Full text: ${fullTextAnnotation.text}`);
+    fullTextAnnotation.pages.forEach(page => {
+        page.blocks.forEach(block => {
+            console.log(`Block confidence: ${block.confidence}`);
+            block.paragraphs.forEach(paragraph => {
+                console.log(`Paragraph confidence: ${paragraph.confidence}`);
+                paragraph.words.forEach(word => {
+                    const wordText = word.symbols.map(s => s.text).join('');
+                    console.log(`Word text: ${wordText}`);
+                    console.log(`Word confidence: ${word.confidence}`);
+                    word.symbols.forEach(symbol => {
+                        console.log(`Symbol text: ${symbol.text}`);
+                        console.log(`Symbol confidence: ${symbol.confidence}`);
+                    });
+                });
+            });
+        });
+    });
+
+
+    //TODO:  after we get result from model we use difflib matcher
+
+    //TODO: send 5 choices to front and image unique name 
+
+
+    res.send("done");
+};
+
+
+const saveToDataset = (req, res) => {
+    const { imgName, label } = req.query;
+    const data = [{
+        imgPath: `uploads/${imgName}`,
+        label: label,
+    }]
+
+    csvWriter
+        .writeRecords(data)
+
+    res.status(StatusCodes.OK).json({ msg: "success" })
+}
+
 module.exports = {
     createDrug,
     getDrug,
@@ -186,5 +253,7 @@ module.exports = {
     addToList,
     deleteFromList,
     getDrugNames,
-    autoComplete
+    autoComplete,
+    scan,
+    saveToDataset
 };

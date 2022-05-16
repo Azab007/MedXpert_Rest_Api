@@ -1,5 +1,7 @@
 const router = require('express').Router();
-const { createDrug, getDrug, getAllDrugs, updateDrug, deleteDrug, addToList, deleteFromList, getDrugNames, autoComplete } = require('../controllers/drug.js');
+const multer = require('multer')
+const upload = multer({ dest: 'uploads/' })
+const { createDrug, getDrug, getAllDrugs, updateDrug, deleteDrug, addToList, deleteFromList, getDrugNames, autoComplete, scan, saveToDataset } = require('../controllers/drug.js');
 const { isPharma, authenticateUser } = require('../middleware/authentication.js');
 
 router.route('/createDrug').post(authenticateUser, isPharma, createDrug);
@@ -11,6 +13,9 @@ router.route('/addToList').patch(authenticateUser, isPharma, addToList);
 router.route('/deleteFromList').patch(authenticateUser, isPharma, deleteFromList);
 router.route('/deleteDrug').delete(authenticateUser, isPharma, deleteDrug);
 router.route('/autoComplete').get(authenticateUser, autoComplete);
+router.route('/scan').post(upload.single('image'), scan);
+router.route('/saveToDataset').get(saveToDataset);
+
 
 
 
