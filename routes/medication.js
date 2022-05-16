@@ -15,9 +15,9 @@ router.route('/createMedication').post(authenticateUser, isPatientorDoctor, crea
 router.route('/getMedication').get(authenticateUser, isPatientorDoctor, getMedication);
 router.route('/getAllMedications').get(authenticateUser, getAllMedications);
 router.route('/updateMedication').patch(authenticateUser, isPatientorDoctor, updateMedication);
-router.route('/addMedicationDrug').patch(authenticateUser, isDoctor, addMedicationDrug);
-router.route('/deleteMedicationDrug').patch(authenticateUser, isDoctor, deleteMedicationDrug);
-router.route('/deleteMedication').delete(authenticateUser, isDoctor, deleteMedication);
+router.route('/addMedicationDrug').patch(authenticateUser, isPatientorDoctor, addMedicationDrug);
+router.route('/deleteMedicationDrug').patch(authenticateUser, isPatientorDoctor, deleteMedicationDrug);
+router.route('/deleteMedication').delete(authenticateUser, isPatientorDoctor, deleteMedication);
 router.route('/getFollowingMedication').get(authenticateUser, isPatient, getFollowingMedication);
 router.route('/getMedicationsByPatientId').get(authenticateUser, isPatientorDoctor, getMedicationsByPatientId);
 
