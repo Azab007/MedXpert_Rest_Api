@@ -112,26 +112,33 @@ const getAllMedications = async(req, res) => {
 
 const updateMedication = async(req, res) => {
     const Medication_id = req.query.id;
-    const { _id, drugs, ...others } = req.body
+    const { currentlyTaken, drug_id } = req.body
     const MedFromDB = await Medication.findById(Medication_id);
     if (!MedFromDB) {
         throw new NotFoundError("no Medication matches this id")
     }
 
-    // if (req.user.userId !== MedFromDB.doctor_id.toString()) {
-    //     throw new UnauthorizedError("you can update only your Medications")
-    // }
-    const medication = await Medication.findByIdAndUpdate(Medication_id, { $set: others }, { runValidators: true, new: true });
-    const interactions = await checkInteractions(medication.drugs)
+    if (req.user.userId !== MedFromDB.patient_id.toString()) {
+        throw new UnauthorizedError("you can update only your Medications")
+    }
+
+    Medication.findOne({
+            _id: Medication_id
+        }).then(doc => {
+            item = doc.drugs.find(drug => drug.drug_id.toString() === drug_id);
+            item["currentlyTaken"] = currentlyTaken;
+            doc.save();
+            res.status(StatusCodes.OK).json({
+                "data": doc,
+                msg: "the Medication is updated succesfully"
+            });
+
+        })
+        // const interactions = await checkInteractions(medication.drugs)
 
 
-    const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
-    res.status(StatusCodes.OK).json({
-        "data": medication,
-        msg: "the Medication is updated succesfully",
-        interactions,
-        restrictions
-    });
+    // const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
+
 
 };
 
