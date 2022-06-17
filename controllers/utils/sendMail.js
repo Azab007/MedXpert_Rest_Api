@@ -20,9 +20,9 @@ const sendEmail = async(email, subject, text) => {
         };
         transporter.sendMail(mailOptions, function(err, info) {
             if (err) {
-                res.json(err);
+                throw new BadRequestError(err.message)
             } else {
-                res.json(info);
+                console.log(info);
             }
         });
     } catch (error) {
