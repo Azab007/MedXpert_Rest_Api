@@ -107,21 +107,28 @@ const login = async(req, res, next) => {
     if (!validPassword) {
         throw new UnauthenticatedError('Wrong password!');
     }
-    const token = jwt.sign({
-            email: loaded.email,
-            userId: loaded._id.toString(),
-            role: role
-        },
-        process.env.jwt_secret_key, { expiresIn: '30d' }
-    );
+    let token
+    if (!loaded.verified) {
+        token = null
+    } else {
+        token = jwt.sign({
+                email: loaded.email,
+                userId: loaded._id.toString(),
+                role: role
+            },
+            process.env.jwt_secret_key, { expiresIn: '30d' }
+        );
+    }
 
-    const oneDay = 1000 * 60 * 60 * 24;
-    res.cookie('token', token, {
-        httpOnly: true,
-        expires: new Date(Date.now() + oneDay),
-        secure: process.env.NODE_ENV === 'production',
-        signed: true,
-    });
+
+
+    // const oneDay = 1000 * 60 * 60 * 24;
+    // res.cookie('token', token, {
+    //     httpOnly: true,
+    //     expires: new Date(Date.now() + oneDay),
+    //     secure: process.env.NODE_ENV === 'production',
+    //     signed: true,
+    // });
     res.status(StatusCodes.OK).json({ "msg": "success", token });
 
 }
