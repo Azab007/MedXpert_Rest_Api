@@ -32,8 +32,8 @@ const MedicationSchema = new mongoose.Schema({
             currentlyTaken: {
                 type: Boolean,
                 default: true
-            },
-            _id: false,
+            }
+            // _id: false,
         },
 
     ],
