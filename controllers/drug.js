@@ -1,8 +1,8 @@
 const Drug = require('../models/Drug.js')
 const { default: mongoose } = require('mongoose');
-const df = require('difflib');
-const vision = require('@google-cloud/vision');
 
+const vision = require('@google-cloud/vision');
+const request = require('request');
 const { NotFoundError, BadRequestError, UnauthorizedError } = require('../errors')
 const { StatusCodes } = require('http-status-codes');
 
@@ -198,37 +198,49 @@ const scan = async(req, res) => {
     const client = new vision.ImageAnnotatorClient();
 
     const fileName = file.path;
-
+    const english = /^[A-Za-z0-9]*$/;
     // Read a local image as a text document
     const [result] = await client.documentTextDetection(fileName);
-    const fullTextAnnotation = result.fullTextAnnotation;
-    console.log(`Full text: ${fullTextAnnotation.text}`);
-    fullTextAnnotation.pages.forEach(page => {
-        page.blocks.forEach(block => {
-            console.log(`Block confidence: ${block.confidence}`);
-            block.paragraphs.forEach(paragraph => {
-                console.log(`Paragraph confidence: ${paragraph.confidence}`);
-                paragraph.words.forEach(word => {
-                    const wordText = word.symbols.map(s => s.text).join('');
-                    console.log(`Word text: ${wordText}`);
-                    console.log(`Word confidence: ${word.confidence}`);
-                    word.symbols.forEach(symbol => {
-                        console.log(`Symbol text: ${symbol.text}`);
-                        console.log(`Symbol confidence: ${symbol.confidence}`);
-                    });
-                });
-            });
-        });
-    });
+    const textAnnotations = result.textAnnotations
+    const fullTextAnnotation = textAnnotations.filter((data, indx) => indx && english.test(data.description));
 
 
-    //TODO:  after we get result from model we use difflib matcher
-
-    //TODO: send 5 choices to front and image unique name 
+    let finalDAta = []
 
 
-    res.send("done");
+    for (const data of fullTextAnnotation) {
+        res = await match(data.description)
+        if (res.length) {
+            finalDAta.push({ "vertices": data.boundingPoly.vertices, "names": res })
+        }
+
+    }
+    res.status(StatusCodes.OK).json({ "data": finalDAta });
 };
+
+
+const match = (name) => {
+    return new Promise(resolve => {
+        var options = {
+            'method': 'POST',
+            'url': 'http://127.0.0.1:5000/matcher/',
+            'headers': {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "name": name
+            })
+
+        };
+        request(options, function(error, response) {
+            if (error) throw new Error(error);
+            const ret = JSON.parse(response.body).data.map(x => x[1])
+                // console.log(ret)
+            resolve(ret)
+        });
+    })
+
+}
 
 
 const saveToDataset = (req, res) => {
@@ -243,6 +255,7 @@ const saveToDataset = (req, res) => {
 
     res.status(StatusCodes.OK).json({ msg: "success" })
 }
+
 
 module.exports = {
     createDrug,
