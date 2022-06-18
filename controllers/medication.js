@@ -7,6 +7,18 @@ const { NotFoundError, BadRequestError, UnauthenticatedError, UnauthorizedError 
 const { object } = require('underscore');
 const Doctor = require('../models/Doctor.js');
 
+const containsObject = (obj, list) => {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        var lis = list[i]
+        if (lis.drug_id.toString() === obj.drug_id.toString() && lis.drug_name === obj.drug_name && lis.dose.toString() === obj.dose.toString() && new Date(lis.start_date).getTime() === new Date(obj.start_date).getTime() && new Date(lis.end_date).getTime() === new Date(obj.end_date).getTime()) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 const checkInteractions = async(drugList) => {
     const drugsIDs = drugList.map(drug => drug.drug_id)
     let Interactions = new object
@@ -179,6 +191,11 @@ const addMedicationDrug = async(req, res) => {
     if (req.body.start_date >= req.body.end_date) {
         throw new BadRequestError("start date must be smaller than end date")
     }
+
+    if (containsObject(req.body, MedFromDB.drugs)) {
+        throw new BadRequestError("You already have this drug in your medication")
+    }
+
     const medication = await Medication.findByIdAndUpdate(medication_id, { $addToSet: { drugs: req.body } }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
     const restrictions = await checkRestrictions(medication.drugs, medication.patient_id)
