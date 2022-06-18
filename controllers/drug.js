@@ -209,13 +209,13 @@ const scan = async(req, res) => {
 
 
     for (const data of fullTextAnnotation) {
-        res = await match(data.description)
-        if (res.length) {
-            finalDAta.push({ "vertices": data.boundingPoly.vertices, "names": res })
+        response = await match(data.description)
+        if (response.length) {
+            finalDAta.push({ "vertices": data.boundingPoly.vertices, "names": response })
         }
 
     }
-    res.status(StatusCodes.OK).json({ "data": finalDAta });
+    res.status(StatusCodes.OK).json({ imgName: file.filename, "data": finalDAta });
 };
 
 
