@@ -4,8 +4,7 @@ const notificationSchema = new mongoose.Schema({
     patientId: {
         type: mongoose.Types.ObjectId,
         ref: 'Patient',
-        required: true,
-        unique: true
+        required: true
     },
 
     drugUniqueId: {
