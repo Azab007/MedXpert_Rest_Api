@@ -229,7 +229,7 @@ const deleteDoctorFromPatient = async(req, res) => {
 
 const getArticles = async(req, res) => {
     const keyword = req.query.keyword
-    const url = `http://api.mediastack.com/v1/news?access_key=974d300743a97d06312c34fd80d5cbcc&languages=en&keywords=${keyword.trim()}&limit=50&categories=science,health&countries=us,eg`
+    const url = `http://api.mediastack.com/v1/news?access_key=974d300743a97d06312c34fd80d5cbcc&languages=en,ar&keywords=${keyword.trim()}&limit=50&categories=science,health`
 
     const respnse = await axios.get(url)
     res.status(StatusCodes.OK).json(respnse.data)
