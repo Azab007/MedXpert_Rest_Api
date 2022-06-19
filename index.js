@@ -14,6 +14,7 @@ const doctorRouter = require('./routes/doctor')
 const patientRouter = require('./routes/patient')
 const reviewRouter = require('./routes/review')
 const pharmaRoutes = require('./routes/pharma_inc')
+const notificationsRoutes = require('./routes/notifications')
 const cookieParser = require('cookie-parser');
 
 
@@ -40,6 +41,7 @@ app.use('/api/doctor', doctorRouter);
 app.use('/api/patient', patientRouter)
 app.use('/api/review', reviewRouter)
 app.use('/api/pharma', pharmaRoutes)
+app.use('/api/notifications', notificationsRoutes)
 app.use(errorHandller);
 
 
