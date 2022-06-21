@@ -41,7 +41,7 @@ app.use('/api/doctor', doctorRouter);
 app.use('/api/patient', patientRouter)
 app.use('/api/review', reviewRouter)
 app.use('/api/pharma', pharmaRoutes)
-app.use('/api/notifications', notificationsRoutes)
+app.use('/api/notification', notificationsRoutes)
 app.use(errorHandller);
 
 

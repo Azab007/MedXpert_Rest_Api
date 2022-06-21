@@ -12,6 +12,7 @@ const csvWriter = createCsvWriter({
     path: 'dataset.csv',
     header: [
         { id: 'imgPath', title: 'ImgPath' },
+        { id: 'vertices', title: 'Vertices' },
         { id: 'label', title: 'Label' }
     ]
 });
@@ -209,7 +210,10 @@ const scan = async(req, res) => {
 
 
     for (const data of fullTextAnnotation) {
-        response = await match(data.description)
+        console.log(data.description)
+        console.log(data.boundingPoly.vertices)
+        response = await match(data.description.toLowerCase())
+        response.push(data.description)
         if (response.length) {
             finalDAta.push({ "vertices": data.boundingPoly.vertices, "names": response })
         }
@@ -244,9 +248,16 @@ const match = (name) => {
 
 
 const saveToDataset = (req, res) => {
-    const { imgName, label } = req.query;
+    const { imgName, vertices, label } = req.body;
+    let v = ""
+    vertices.forEach(o => {
+        for (let key in o) {
+            v = v + o[key] + ", "
+        }
+    })
     const data = [{
         imgPath: `uploads/${imgName}`,
+        vertices: v,
         label: label,
     }]
 

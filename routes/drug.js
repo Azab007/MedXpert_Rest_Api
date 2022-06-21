@@ -14,7 +14,7 @@ router.route('/deleteFromList').patch(authenticateUser, isPharma, deleteFromList
 router.route('/deleteDrug').delete(authenticateUser, isPharma, deleteDrug);
 router.route('/autoComplete').get(authenticateUser, autoComplete);
 router.route('/scan').post(upload.single('image'), scan);
-router.route('/saveToDataset').get(saveToDataset);
+router.route('/saveToDataset').post(saveToDataset);
 
 
 
