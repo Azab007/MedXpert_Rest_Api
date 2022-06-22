@@ -84,7 +84,8 @@ const ConfirmPasswordReset = async(req, res) => {
         numbers: true,
         uppercase: true,
         lowercase: true,
-        symbols: false
+        strict: true,
+        symbols: "@$!%*?&"
     });
     const hasedPassword = await bcrypt.hash(password, 12);
     user.password = hasedPassword;
