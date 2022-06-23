@@ -8,7 +8,7 @@ const VerificationToken = require('../../models/VerificationToken')
 
 
 
-const mailVerification = async(req, res) => {
+exports.mailVerification = async(req, res) => {
     const code = req.query.code
         // check in data
     let tokenData = await VerificationToken.findOneAndDelete({ token: code })
@@ -31,5 +31,3 @@ const mailVerification = async(req, res) => {
     res.status(StatusCodes.OK).json({ "msg": "mail activated" })
 
 }
-
-module.exports = { mailVerification }

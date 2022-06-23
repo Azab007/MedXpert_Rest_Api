@@ -211,7 +211,6 @@ const scan = async(req, res) => {
 
     for (const data of fullTextAnnotation) {
         response = await match(data.description.toLowerCase())
-        let finalDAta = []
         if (response.length) {
             finalDAta.push({ "vertices": data.boundingPoly.vertices, "names": response })
         }

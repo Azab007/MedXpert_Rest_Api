@@ -9,7 +9,7 @@ const Crypto = require('crypto');
 const { StatusCodes } = require('http-status-codes');
 var generator = require('generate-password');
 
-const passwordReset = async(req, res) => {
+exports.passwordReset = async(req, res) => {
     const { email, role } = req.body
     let user;
 
@@ -53,7 +53,7 @@ const passwordReset = async(req, res) => {
 
 };
 
-const ConfirmPasswordReset = async(req, res) => {
+exports.ConfirmPasswordReset = async(req, res) => {
     const tk = req.params.token;
 
     const token = await PasswordResetToken.findOne({
@@ -97,5 +97,3 @@ const ConfirmPasswordReset = async(req, res) => {
     console.log(password, hasedPassword)
     res.status(StatusCodes.OK).send(`check Your inbox for your new Password`);
 };
-
-module.exports = { passwordReset, ConfirmPasswordReset }

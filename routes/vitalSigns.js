@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { createVitalSign, getAllVitalSigns, getVitalSignDoctor, getVitalSignPatient, updateVitalSign, deleteVitalSign } = require('../controllers/vitalSigns.js');
+const { createVitalSign, getAllVitalSigns, getVitalSignDoctor, getVitalSignPatient, updateVitalSign, deleteVitalSign } = require('../controllers/vitalSigns/index.js');
 const { authenticateUser, isPatient, isDoctor } = require('../middleware/authentication');
 router.route('/createvitalSign').post(authenticateUser, isPatient, createVitalSign);
 router.route('/getvitalSignPatient').get(authenticateUser, isPatient, getVitalSignPatient);

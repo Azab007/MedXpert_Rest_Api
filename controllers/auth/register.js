@@ -39,7 +39,7 @@ async function sendVerification(email, code) {
 
 
 
-const register = async(req, res, next) => {
+exports.register = async(req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         throw new BadRequestError("data are invalid")
@@ -91,6 +91,3 @@ const register = async(req, res, next) => {
 
 
 }
-
-
-module.exports = { register }

@@ -9,7 +9,7 @@ const { StatusCodes } = require('http-status-codes');
 
 
 
-const login = async(req, res, next) => {
+exports.login = async(req, res, next) => {
 
     const { email, password, role } = req.body
 
@@ -55,8 +55,3 @@ const login = async(req, res, next) => {
     res.status(StatusCodes.OK).json({ "msg": "success", token });
 
 }
-
-
-
-
-module.exports = { login }
