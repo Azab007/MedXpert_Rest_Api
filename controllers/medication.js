@@ -74,6 +74,9 @@ const createMedication = async(req, res) => {
             patient_id: patientId,
             doctor_id: docId
         });
+        if (req.user.role == 'doctor') {
+            newMedication.populate('doctor_id', 'username')
+        }
 
         await newMedication.save();
         const interactions = await checkInteractions(others.drugs)
