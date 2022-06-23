@@ -1,3 +1,3 @@
-/node_modules
+**/node_modules
 .env
 /beaming-magnet-353613-f0962a90c632.json
