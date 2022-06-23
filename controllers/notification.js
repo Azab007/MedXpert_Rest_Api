@@ -36,8 +36,9 @@ const getNotification = async(req, res) => {
 
 const deleteNotification = async(req, res) => {
 
-    const id = req.query.id;
-    await Notification.findOneAndRemove({ drugUniqueId: id });
+    const { drugUniqueId, drugName, date, time } = req.body;
+
+    await Notification.findOneAndRemove({ drugUniqueId: drugUniqueId, drugName: drugName, date: date, time: time });
     res.status(StatusCodes.OK).json({ msg: "the notification is deleted succesfully" });
 
 
