@@ -74,9 +74,7 @@ const createMedication = async(req, res) => {
             patient_id: patientId,
             doctor_id: docId
         });
-        if (req.user.role == 'doctor') {
-            newMedication.populate('doctor_id', 'username')
-        }
+
 
         await newMedication.save();
         const interactions = await checkInteractions(others.drugs)
@@ -271,7 +269,7 @@ const getMedicationsByPatientId = async(req, res) => {
             //     throw new UnauthorizedError("you can not access this data")
             // }
     }
-    const Medications = await Medication.find({ "patient_id": id });
+    const Medications = await Medication.find({ "patient_id": id }).populate('doctor_id', 'username');
     const meds = Medications.filter(obj => obj.drugs.length > 0)
         // const interactions = await checkInteractions(medication.drugs)
         // const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
