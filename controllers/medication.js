@@ -69,6 +69,11 @@ const createMedication = async(req, res) => {
 
 
     try {
+        for (let m in others["drugs"]) {
+            if (others["drugs"][m].start_date >= others["drugs"][m].end_date) {
+                throw new BadRequestError("start date must be smaller than end date")
+            }
+        }
         const newMedication = new Medication({
             ...others,
             patient_id: patientId,
@@ -182,11 +187,11 @@ const addMedicationDrug = async(req, res) => {
     }
 
     if (req.user.role === 'doctor' && req.user.userId !== MedFromDB.doctor_id.toString()) {
-        throw new UnauthorizedError("you can delete only your Medications")
+        throw new UnauthorizedError("you can add to only your Medications")
     }
 
     if (req.user.role === 'patient' && req.user.userId !== MedFromDB.patient_id.toString()) {
-        throw new UnauthorizedError("you can delete only your Medications")
+        throw new UnauthorizedError("you can add to only your Medications")
     }
 
     if (req.body.start_date >= req.body.end_date) {
