@@ -45,11 +45,23 @@ const deleteNotification = async(req, res) => {
 
 }
 
+const deleteNotificationByDrugUniqueId = async(req, res) => {
+
+    const id = req.query.id;
+
+    await Notification.remove({ drugUniqueId: id });
+    res.status(StatusCodes.OK).json({ msg: "the notifications is deleted succesfully" });
+
+
+
+}
+
 
 
 
 module.exports = {
     createNotification,
     deleteNotification,
-    getNotification
+    getNotification,
+    deleteNotificationByDrugUniqueId
 };
