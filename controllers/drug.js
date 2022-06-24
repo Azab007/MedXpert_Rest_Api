@@ -195,6 +195,7 @@ const autoComplete = (req, res) => {
 
 
 const scan = async(req, res) => {
+    console.log(req)
     const file = req.file;
     const client = new vision.ImageAnnotatorClient();
 
