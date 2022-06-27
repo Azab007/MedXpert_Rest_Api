@@ -199,7 +199,7 @@ const scan = async(req, res) => {
     const client = new vision.ImageAnnotatorClient();
 
     const fileName = file.path;
-    const english = /^[A-Za-z0-9]*$/;
+    const english = /^[A-Za-z]*$/;
     // Read a local image as a text document
     const [result] = await client.documentTextDetection(fileName);
     const textAnnotations = result.textAnnotations
@@ -210,7 +210,7 @@ const scan = async(req, res) => {
 
 
     for (const data of fullTextAnnotation) {
-        // response = await match(data.description.toLowerCase())
+        //response = await match(data.description.toLowerCase())
         response = [data.description.toLowerCase()]
         if (response.length) {
             finalDAta.push({ "vertices": data.boundingPoly.vertices, "names": response })
