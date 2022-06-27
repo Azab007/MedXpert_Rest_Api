@@ -13,12 +13,20 @@ const Crypto = require('crypto');
 
 
 const regPatient = async(data) => {
+    const patient = await Patient.findOne({ email: data.email })
+    if (patient) {
+        throw new BadRequestError("email already exists, please choose another one")
+    }
     const newPatient = new Patient(data);
     await newPatient.save();
     return newPatient._id
 }
 
 const regDoctor = async(data) => {
+    const doctor = await Doctor.findOne({ email: data.email })
+    if (doctor) {
+        throw new BadRequestError("email already exists, please choose another one")
+    }
     const newDoctor = new Doctor(data);
     await newDoctor.save();
     return newDoctor._id
@@ -48,7 +56,7 @@ exports.register = async(req, res, next) => {
     const matched = req.body.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);
 
     if (!matched) {
-        throw new BadRequestError("Minimum eight characters, at least one uppercase letter,\
+        throw new BadRequestError("password should be Minimum eight characters, at least one uppercase letter,\
          one lowercase letter, one number and one special character");
     }
     const hasedPassword = await bcrypt.hash(req.body.password, 12);
