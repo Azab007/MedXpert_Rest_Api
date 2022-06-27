@@ -142,7 +142,7 @@ const updateMedication = async(req, res) => {
 
     Medication.findOne({
             _id: Medication_id
-        }).then(doc => {
+        }).populate('doctor_id', 'username').then(doc => {
             item = doc.drugs.find(drug => drug.drug_id.toString() === drug_id);
             item["currentlyTaken"] = currentlyTaken;
             doc.save();
