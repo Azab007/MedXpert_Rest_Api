@@ -5,7 +5,15 @@ const Doctor = require('../../models/Doctor.js');
 const Pharma_Inc = require('../../models/Pharma_Inc.js');
 const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../../errors')
 const { StatusCodes } = require('http-status-codes');
+const VerificationToken = require('../../models/VerificationToken')
+const sendEmail = require("../utils/sendMail.js");
+const Crypto = require('crypto');
 
+async function sendVerification(email, code) {
+    // let testAccount = await nodemailer.createTestAccount();
+    let text = `to activate your account please click <a href="http://localhost:8000/api/auth/mailVerification?code=${code}"> here</a> `
+    sendEmail(email, `mail activation`, text);
+}
 
 
 
@@ -39,8 +47,23 @@ exports.login = async(req, res, next) => {
         throw new UnauthenticatedError('Wrong password!');
     }
     let token
+    await VerificationToken.deleteOne({id: loaded._id})
     if (!loaded.verified) {
         token = null
+        const Token = Crypto
+        .randomBytes(24)
+        .toString('base64')
+        .slice(0, 24)
+
+    const tokenData = new VerificationToken({
+        Token,
+        id: loaded._id,
+        isPatient: role === 'patient'
+    })
+
+    await tokenData.save()
+
+    sendVerification(req.body.email, Token)
     } else {
         token = jwt.sign({
                 email: loaded.email,
