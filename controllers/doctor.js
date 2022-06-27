@@ -8,7 +8,7 @@ const { default: axios } = require('axios');
 
 const getDoc = async(req, res) => {
 
-    const doc_id = req.user.userId;
+    const doc_id = req.user.role == 'doctor' ? req.user.userId : req.query.id;
     const doc = await Doctor.findById(doc_id).populate('followings.patient_id', "_id username email gender");
     if (!doc) {
         throw new NotFoundError('doctor not found')

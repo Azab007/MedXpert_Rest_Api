@@ -13,10 +13,11 @@ const {
 
 const {
     authenticateUser,
-    isDoctor
+    isDoctor,
+    isPatientorDoctor
 } = require('../middleware/authentication')
 
-router.route('/getDoctor').get(authenticateUser, getDoc)
+router.route('/getDoctor').get(authenticateUser, isPatientorDoctor, getDoc)
 router.route('/getAllDoctors').get(authenticateUser, getAllDoc)
 router.route('/deleteDoctor').delete(authenticateUser, isDoctor, deleteDoc)
 router.route('/addSpecialization').patch(authenticateUser, isDoctor, addSpecialization)
