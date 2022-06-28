@@ -14,18 +14,18 @@ exports.getVitalSignDoctor = async(req, res) => {
     //const patient_id = patient._id;
     const vitalSigns = await VitalSign.find({ patient_id: patient_id }, {}, { sort: { 'createdAt': -1 } });
     const resData = [...vitalSigns]
-    // if (!vitalSigns.length) {
-    //     throw new NotFoundError("no vital signs found for this id")
+        // if (!vitalSigns.length) {
+        //     throw new NotFoundError("no vital signs found for this id")
+        // }
+        // for (let i = 0; i < vitalSigns.length; i++) {
+        //     const vital = await vitalSigns[i].populate('patient_id', 'clinicians');
+        //     const clinicians = vital.patient_id.clinicians
+        //     if (!search(clinicians, req.user.userId)) {
+        //         throw new UnauthorizedError("you can see only your patients vital signs")
+        //     }
+
+
     // }
-    for (let i = 0; i < vitalSigns.length; i++) {
-        const vital = await vitalSigns[i].populate('patient_id', 'clinicians');
-        const clinicians = vital.patient_id.clinicians
-        if (!search(clinicians, req.user.userId)) {
-            throw new UnauthorizedError("you can see only your patients vital signs")
-        }
-
-
-    }
     // checkVitalSigns(vitalSigns);
     res.status(StatusCodes.OK).json({ "data": resData, "msg": "success" });
 
