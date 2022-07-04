@@ -9,8 +9,7 @@ const notificationSchema = new mongoose.Schema({
 
     drugUniqueId: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     drugName: {
         type: String,
