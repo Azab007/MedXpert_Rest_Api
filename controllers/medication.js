@@ -202,7 +202,7 @@ const addMedicationDrug = async(req, res) => {
         throw new BadRequestError("You already have this drug in your medication")
     }
 
-    const medication = await Medication.findByIdAndUpdate(medication_id, { $addToSet: { drugs: req.body } }, { runValidators: true, new: true });
+    const medication = await Medication.findByIdAndUpdate(medication_id, { $addToSet: { drugs: req.body } }, { runValidators: true, new: true }).populate('doctor_id', 'username');
     const interactions = await checkInteractions(medication.drugs)
     const restrictions = await checkRestrictions(medication.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
