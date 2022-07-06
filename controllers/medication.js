@@ -152,7 +152,7 @@ const updateMedication = async(req, res) => {
 
     let response = await Medication.findOne({ _id: Medication_id }).populate('doctor_id', 'username')
     response.drugs.splice(index, 1)
-    if (response.drugs == 0) {
+    if (response.drugs.length == 0) {
         response = []
     }
     res.status(StatusCodes.OK).json({
