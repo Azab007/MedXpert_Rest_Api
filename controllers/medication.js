@@ -156,9 +156,6 @@ const updateMedication = async(req, res) => {
         }
     }
     response.drugs = d
-    if (response.drugs.length == 0) {
-        response = []
-    }
     res.status(StatusCodes.OK).json({
         "data": response,
         msg: "the Medication is updated succesfully"
