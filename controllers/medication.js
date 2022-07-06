@@ -139,27 +139,24 @@ const updateMedication = async(req, res) => {
     if (req.user.userId !== MedFromDB.patient_id.toString()) {
         throw new UnauthorizedError("you can update only your Medications")
     }
-
+    let index
     Medication.findOne({
-            _id: Medication_id
-        }).populate('doctor_id', 'username').then(doc => {
-            console.log(doc.drugs)
-            item = doc.drugs.find(drug => drug._id.toString() === _id);
-            item["currentlyTaken"] = currentlyTaken;
-            item["isHelpful"] = isHelpful;
-            doc.save();
-            res.status(StatusCodes.OK).json({
-                "data": doc,
-                msg: "the Medication is updated succesfully"
-            });
+        _id: Medication_id
+    }).populate('doctor_id', 'username').then(doc => {
+        item = doc.drugs.find(drug => drug._id.toString() === _id);
+        index = doc.drugs.indexOf(item);
+        item["currentlyTaken"] = currentlyTaken;
+        item["isHelpful"] = isHelpful;
+        doc.save();
+    })
 
-        })
-        // const interactions = await checkInteractions(medication.drugs)
-
-
-    // const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
-
-
+    let response = await Medication.findOne({ _id: Medication_id }).populate('doctor_id', 'username')
+    response.drugs.splice(index, 1)
+    response = response.filter(obj => obj.drugs.length > 0)
+    res.status(StatusCodes.OK).json({
+        "data": response,
+        msg: "the Medication is updated succesfully"
+    });
 };
 
 
