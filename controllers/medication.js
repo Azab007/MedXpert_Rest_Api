@@ -233,7 +233,7 @@ const deleteMedicationDrug = async(req, res) => {
     if (req.user.role === 'patient' && req.user.userId !== MedFromDB.patient_id.toString()) {
         throw new UnauthorizedError("you can delete only your Medications")
     }
-    const medication = await Medication.findByIdAndUpdate(medication_id, { $pull: { drugs: { drug_id: mongoose.Types.ObjectId(req.body.drug_id) } } }, { runValidators: true, new: true });
+    const medication = await Medication.findByIdAndUpdate(medication_id, { $pull: { drugs: { _id: mongoose.Types.ObjectId(req.body._id) } } }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
     const restrictions = await checkRestrictions(medication.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
