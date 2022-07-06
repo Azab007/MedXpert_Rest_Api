@@ -233,6 +233,9 @@ const deleteMedicationDrug = async(req, res) => {
     const medication = await Medication.findByIdAndUpdate(medication_id, { $pull: { drugs: { _id: mongoose.Types.ObjectId(req.body._id) } } }, { runValidators: true, new: true });
     const interactions = await checkInteractions(medication.drugs)
     const restrictions = await checkRestrictions(medication.drugs, medication.patient_id)
+    if (medication.drugs.length == 0) {
+        await Medication.deleteOne({ _id: medication._id.toString() })
+    }
     res.status(StatusCodes.OK).json({
         "data": medication,
         msg: "the medication drug is deleted succesfully",
