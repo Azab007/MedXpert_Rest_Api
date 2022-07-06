@@ -152,7 +152,9 @@ const updateMedication = async(req, res) => {
 
     let response = await Medication.findOne({ _id: Medication_id }).populate('doctor_id', 'username')
     response.drugs.splice(index, 1)
-    response = response.filter(obj => obj.drugs.length > 0)
+    if (response.drugs == 0) {
+        response = []
+    }
     res.status(StatusCodes.OK).json({
         "data": response,
         msg: "the Medication is updated succesfully"
