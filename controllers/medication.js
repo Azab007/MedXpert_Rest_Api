@@ -130,7 +130,7 @@ const getAllMedications = async(req, res) => {
 
 const updateMedication = async(req, res) => {
     const Medication_id = req.query.id;
-    const { currentlyTaken, drug_id } = req.body
+    const { currentlyTaken, _id, isHelpful } = req.body
     const MedFromDB = await Medication.findById(Medication_id);
     if (!MedFromDB) {
         throw new NotFoundError("no Medication matches this id")
@@ -143,8 +143,10 @@ const updateMedication = async(req, res) => {
     Medication.findOne({
             _id: Medication_id
         }).populate('doctor_id', 'username').then(doc => {
-            item = doc.drugs.find(drug => drug.drug_id.toString() === drug_id);
+            console.log(doc.drugs)
+            item = doc.drugs.find(drug => drug._id.toString() === _id);
             item["currentlyTaken"] = currentlyTaken;
+            item["isHelpful"] = isHelpful;
             doc.save();
             res.status(StatusCodes.OK).json({
                 "data": doc,
@@ -261,23 +263,26 @@ const getFollowingMedication = async(req, res) => {
 
 
 const getMedicationsByPatientId = async(req, res) => {
-    let id;
     const role = req.user.role;
-    if (role == "patient") {
-        id = req.user.userId
-    } else {
-        id = req.query.id
-            // const me = await Doctor.findById(req.user.userId);
-            // const followingIds = me.followings.map(obj => obj.patient_id.toString())
-            // console.log(followingIds);
-            // if (!followingIds.includes(id)) {
-            //     throw new UnauthorizedError("you can not access this data")
-            // }
-    }
+    const id = role == 'patient' ? req.user.userId : req.query.id;
     const Medications = await Medication.find({ "patient_id": id }).populate('doctor_id', 'username');
-    const meds = Medications.filter(obj => obj.drugs.length > 0)
-        // const interactions = await checkInteractions(medication.drugs)
-        // const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
+    let meds = Medications.filter(obj => obj.drugs.length > 0)
+
+    if (meds.length > 0 && role == "patient") {
+        for (let i in meds) {
+            let d = [];
+            for (let j in meds[i].drugs) {
+                if (meds[i].drugs[j].isHelpful == null) {
+                    d.push(meds[i].drugs[j])
+                }
+            }
+            meds[i].drugs = d
+        }
+        meds = meds.filter(obj => obj.drugs.length > 0)
+    }
+
+    // const interactions = await checkInteractions(medication.drugs)
+    // const restrictions = await checkRestrictions(others.drugs, medication.patient_id)
     res.status(StatusCodes.OK).json({
         "data": meds,
         msg: "success",
