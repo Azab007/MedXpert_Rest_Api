@@ -5,12 +5,13 @@ const { StatusCodes } = require('http-status-codes');
 
 
 const createNotification = async(req, res) => {
-    const { medicationId, drugUniqueId, drugName, date, time, dateTime } = req.body
+    const { expireAt, medicationId, drugUniqueId, drugName, date, time, dateTime } = req.body
     const newNotification = new Notification({
         drugUniqueId,
         drugName,
         date,
         time,
+        expireAt,
         patientId: req.user.userId
     });
 

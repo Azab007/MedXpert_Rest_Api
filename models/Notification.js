@@ -25,7 +25,6 @@ const notificationSchema = new mongoose.Schema({
     },
     expireAt: {
         type: Date,
-        required: true
     }
 
 }, { timestamps: true })
