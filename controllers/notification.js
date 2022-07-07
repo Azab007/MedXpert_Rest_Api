@@ -1,16 +1,27 @@
 const Notification = require('../models/Notification')
 const Patient = require('../models/Patient')
+const Medication = require('../models/Medication')
 const { StatusCodes } = require('http-status-codes');
 
 
 const createNotification = async(req, res) => {
-    const { patientId, ...others } = req.body
+    const { medicationId, drugUniqueId, drugName, date, time, dateTime } = req.body
     const newNotification = new Notification({
-        ...others,
+        drugUniqueId,
+        drugName,
+        date,
+        time,
         patientId: req.user.userId
     });
 
     await newNotification.save();
+
+    const med = await Medication.findById(medicationId)
+    const drug = med.drugs.find(obj => obj._id.toString() == drugUniqueId)
+    drug.isDoseTaken.push(null)
+    drug.doseDates.push(dateTime)
+
+    await med.save()
     res.status(StatusCodes.CREATED).json({
         "data": newNotification,
         "msg": "Notification created successfully",

@@ -36,8 +36,9 @@ const MedicationSchema = new mongoose.Schema({
             isHelpful: {
                 type: Boolean,
                 default: null
-            }
-            // _id: false,
+            },
+            isDoseTaken: [],
+            doseDates: []
         },
 
     ],

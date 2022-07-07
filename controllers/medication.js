@@ -293,6 +293,25 @@ const getMedicationsByPatientId = async(req, res) => {
 }
 
 
+const isDoseTaken = async(req, res) => {
+    const medication_id = req.query.id
+    const { _id, taken, date } = req.body
+    const med = await Medication.findById(medication_id)
+    const drug = med.drugs.find(obj => obj._id.toString() === _id)
+    console.log(drug)
+    for (let i = 0; i < drug.isDoseTaken.length; i++) {
+        if (drug.doseDates[i] == date && drug.isDoseTaken[i] == null) {
+            drug.isDoseTaken[i] = taken
+            break
+        }
+    }
+    await med.save()
+    res.status(StatusCodes.OK).json({
+        msg: "success"
+    });
+}
+
+
 
 module.exports = {
     createMedication,
@@ -303,5 +322,6 @@ module.exports = {
     addMedicationDrug,
     deleteMedicationDrug,
     getFollowingMedication,
-    getMedicationsByPatientId
+    getMedicationsByPatientId,
+    isDoseTaken
 };
