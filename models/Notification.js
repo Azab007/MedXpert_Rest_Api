@@ -29,5 +29,6 @@ const notificationSchema = new mongoose.Schema({
     }
 
 }, { timestamps: true })
+notificationSchema.index({ expireAt: 1 }, { expireAfterSeconds: 10 });
 
 module.exports = mongoose.model('Notification', notificationSchema);
