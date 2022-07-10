@@ -2,6 +2,7 @@ const Notification = require('../models/Notification')
 const Patient = require('../models/Patient')
 const Medication = require('../models/Medication')
 const { StatusCodes } = require('http-status-codes');
+const { NotFoundError } = require('../errors')
 
 
 const createNotification = async(req, res) => {
@@ -18,6 +19,9 @@ const createNotification = async(req, res) => {
     await newNotification.save();
 
     const med = await Medication.findById(medicationId)
+    if (!med) {
+        throw new NotFoundError('Medication not found')
+    }
     const drug = med.drugs.find(obj => obj._id.toString() == drugUniqueId)
     drug.isDoseTaken.push(null)
     drug.doseDates.push(dateTime)
