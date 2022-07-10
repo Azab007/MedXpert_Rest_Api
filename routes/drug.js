@@ -13,8 +13,8 @@ router.route('/addToList').patch(authenticateUser, isPharma, addToList);
 router.route('/deleteFromList').patch(authenticateUser, isPharma, deleteFromList);
 router.route('/deleteDrug').delete(authenticateUser, isPharma, deleteDrug);
 router.route('/autoComplete').get(authenticateUser, autoComplete);
-router.route('/scan').post(authenticateUser, upload.single('image'), scan);
-router.route('/saveToDataset').post(authenticateUser, saveToDataset);
+router.route('/scan').post(upload.single('image'), scan);
+router.route('/saveToDataset').post(saveToDataset);
 
 
 
