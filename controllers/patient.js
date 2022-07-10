@@ -145,7 +145,7 @@ const useInvitation = async(req, res) => {
         throw new NotFoundError("this invitaions has expired, pls create a new one");
     }
     const followingId = invitation.patient_id
-    if (followingId === myId) {
+    if (followingId.toString() === myId) {
         throw new BadRequestError("You cannot use your own invitation");
     }
     // let diff = new Date() - new Date(invitation.createdAt);
