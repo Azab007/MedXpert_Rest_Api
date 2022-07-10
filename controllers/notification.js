@@ -23,7 +23,7 @@ const createNotification = async(req, res) => {
         throw new NotFoundError('Medication not found')
     }
     const drug = med.drugs.find(obj => obj._id.toString() == drugUniqueId)
-    drug.isDoseTaken.push(null)
+    drug.isDoseTaken.push(0)
     drug.doseDates.push(dateTime)
 
     await med.save()

@@ -300,7 +300,7 @@ const isDoseTaken = async(req, res) => {
     const drug = med.drugs.find(obj => obj._id.toString() === _id)
     console.log(drug)
     for (let i = 0; i < drug.isDoseTaken.length; i++) {
-        if (drug.doseDates[i] == date && drug.isDoseTaken[i] == null) {
+        if (drug.doseDates[i] == date && drug.isDoseTaken[i] != 1) {
             drug.isDoseTaken[i] = taken
             break
         }
