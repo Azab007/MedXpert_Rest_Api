@@ -17,10 +17,10 @@ const createNotification = async(req, res) => {
 
     await newNotification.save();
 
-    // const med = await Medication.findById(medicationId)
-    // const drug = med.drugs.find(obj => obj._id.toString() == drugUniqueId)
-    // drug.isDoseTaken.push(null)
-    // drug.doseDates.push(dateTime)
+    const med = await Medication.findById(medicationId)
+    const drug = med.drugs.find(obj => obj._id.toString() == drugUniqueId)
+    drug.isDoseTaken.push(null)
+    drug.doseDates.push(dateTime)
 
     await med.save()
     res.status(StatusCodes.CREATED).json({
