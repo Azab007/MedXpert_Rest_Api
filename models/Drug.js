@@ -35,6 +35,10 @@ const DrugSchema = new mongoose.Schema({
     overdose: {
         type: Double
     },
+    counter: {
+        type: Number,
+        default: 0
+    },
     more: {
         type: String
     },
