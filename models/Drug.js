@@ -7,8 +7,7 @@ const DrugSchema = new mongoose.Schema({
 
     Inc_id: {
         type: mongoose.Types.ObjectId,
-        ref: 'Pharma_Inc',
-        required: true
+        ref: 'Pharma_Inc'
     },
     drugName: {
         type: String,
@@ -16,8 +15,7 @@ const DrugSchema = new mongoose.Schema({
         unique: true
     },
     category: {
-        type: String,
-        required: true,
+        type: String
     },
     indicationofuse: {
         type: String,
