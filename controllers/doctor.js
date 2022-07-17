@@ -74,7 +74,7 @@ const updateDoc = async(req, res) => {
         gender,
         email,
         birthDate
-    }, { runValidators: true, new: true })
+    }, { runValidators: true, new: true }).populate('followings.patient_id', "_id username email gender");
     if (!doc) {
         throw new NotFoundError('doctor not found')
     }

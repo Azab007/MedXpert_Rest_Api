@@ -64,7 +64,7 @@ const updatePatient = async(req, res) => {
         gender,
         email,
         residency
-    }, { runValidators: true, new: true })
+    }, { runValidators: true, new: true }).populate('followers', "_id username email gender").populate('followings', "_id username email gender").populate('clinicians.doctor', "_id username email gender specialization");
     if (!patient) {
         throw new NotFoundError('patient not found')
     }
