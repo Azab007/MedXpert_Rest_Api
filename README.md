@@ -11,6 +11,7 @@ Welcome to the documentation for the RESTful API of our application. This docume
 4. [Endpoints](#endpoints)
 5. [Request Format](#request-format)
 6. [Response Format](#response-format)
+7. [MedXpert Book](#medxpert-book)
 
 ## Introduction
 
@@ -150,5 +151,10 @@ Example Error Response:
     "message": "Invalid input data.",
 }
 ```
+## MedXpert Book
+For comprehensive details about our project refer to this link to read medXpert Book.
+[MedXpert Book](https://drive.google.com/file/d/1G75W2T96UknGCiZFQZlDA47JYTGofOK1/view?usp=sharing)
+
+
 
 
